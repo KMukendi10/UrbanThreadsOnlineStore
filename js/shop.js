@@ -20,22 +20,17 @@ const logoutBtn = document.getElementById("logout-btn");
 const productsContainer = document.getElementById("products");
 const searchInput = document.getElementById("search");
 
-let allProducts = [];
-
 let currentUser = null;
+let allProducts = [];
+let selectedCategory = "All";
 
-// ---------------------------
 // Authentication
-// ---------------------------
-
 onAuthStateChanged(auth, (user) => {
 
   if (user) {
 
     currentUser = user;
-
     userEmail.textContent = user.email;
-
     loadProducts();
 
   } else {
@@ -46,10 +41,7 @@ onAuthStateChanged(auth, (user) => {
 
 });
 
-// ---------------------------
 // Logout
-// ---------------------------
-
 logoutBtn.addEventListener("click", async () => {
 
   await signOut(auth);
@@ -58,10 +50,7 @@ logoutBtn.addEventListener("click", async () => {
 
 });
 
-// ---------------------------
 // Load Products
-// ---------------------------
-
 async function loadProducts() {
 
   productsContainer.innerHTML = "<p>Loading products...</p>";
@@ -70,114 +59,176 @@ async function loadProducts() {
 
     const querySnapshot = await getDocs(collection(db, "products"));
 
-    productsContainer.innerHTML = "";
+    allProducts = [];
 
     querySnapshot.forEach((doc) => {
 
-      const product = doc.data();
-
-      productsContainer.innerHTML += `
-
-        <div class="product-card">
-
-            <img src="${product.imageURL}" alt="${product.name}">
-
-            <h3>${product.name}</h3>
-
-            <p>${product.description}</p>
-
-            <h4>R${product.price}</h4>
-
-            <button class="add-cart-btn"
-                    data-id="${doc.id}"
-                    data-name="${product.name}"
-                    data-price="${product.price}">
-                Add to Cart
-            </button>
-
-        </div>
-
-      `;
+      allProducts.push({
+        id: doc.id,
+        ...doc.data()
+      });
 
     });
 
-    addCartEvents();
+    filterProducts();
 
   } catch (error) {
 
     console.error(error);
 
-    productsContainer.innerHTML =
-      "<p>Unable to load products.</p>";
+    productsContainer.innerHTML = "<p>Unable to load products.</p>";
 
   }
 
 }
 
-// ---------------------------
-// Add Cart Events
-// ---------------------------
+// Display Products
+function displayProducts(products) {
 
+  productsContainer.innerHTML = "";
+
+  if (products.length === 0) {
+
+    productsContainer.innerHTML = "<p>No products found.</p>";
+    return;
+
+  }
+
+  products.forEach((product) => {
+
+    productsContainer.innerHTML += `
+
+      <div class="product-card">
+
+        <img src="${product.imageURL}" alt="${product.name}">
+
+        <h3>${product.name}</h3>
+
+        <p>${product.description}</p>
+
+        <h4>R${Number(product.price).toFixed(2)}</h4>
+
+        <button
+          class="add-cart-btn"
+          data-id="${product.id}"
+          data-name="${product.name}"
+          data-price="${product.price}">
+
+          Add to Cart
+
+        </button>
+
+      </div>
+
+    `;
+
+  });
+
+  addCartEvents();
+
+}
+
+// Search + Category Filter
+function filterProducts() {
+
+  const search = searchInput.value.toLowerCase().trim();
+
+  const filteredProducts = allProducts.filter((product) => {
+
+    const matchesSearch =
+      product.name.toLowerCase().includes(search);
+
+    const matchesCategory =
+      selectedCategory === "All" ||
+      product.category === selectedCategory;
+
+    return matchesSearch && matchesCategory;
+
+  });
+
+  displayProducts(filteredProducts);
+
+}
+
+searchInput.addEventListener("input", filterProducts);
+
+document.querySelectorAll(".category-btn").forEach((button) => {
+
+  button.addEventListener("click", () => {
+
+    document
+      .querySelectorAll(".category-btn")
+      .forEach(btn => btn.classList.remove("active"));
+
+    button.classList.add("active");
+
+    selectedCategory = button.dataset.category;
+
+    filterProducts();
+
+  });
+
+});
+
+// Add To Cart
 function addCartEvents() {
 
-    const buttons = document.querySelectorAll(".add-cart-btn");
+  const buttons = document.querySelectorAll(".add-cart-btn");
 
-    buttons.forEach((button) => {
+  buttons.forEach((button) => {
 
-        button.addEventListener("click", async () => {
+    button.addEventListener("click", async () => {
 
-            const cartRef = collection(
-                db,
-                "users",
-                currentUser.uid,
-                "cart"
-            );
+      const cartRef = collection(
+        db,
+        "users",
+        currentUser.uid,
+        "cart"
+      );
 
-            const q = query(
-                cartRef,
-                where("productId", "==", button.dataset.id)
-            );
+      const q = query(
+        cartRef,
+        where("productId", "==", button.dataset.id)
+      );
 
-            const snapshot = await getDocs(q);
+      const snapshot = await getDocs(q);
 
-            if (!snapshot.empty) {
+      if (!snapshot.empty) {
 
-                const existingDoc = snapshot.docs[0];
+        const existingDoc = snapshot.docs[0];
 
-                const currentQuantity = existingDoc.data().quantity;
+        await updateDoc(
+          doc(
+            db,
+            "users",
+            currentUser.uid,
+            "cart",
+            existingDoc.id
+          ),
+          {
+            quantity: existingDoc.data().quantity + 1
+          }
+        );
 
-                await updateDoc(
-                    doc(
-                        db,
-                        "users",
-                        currentUser.uid,
-                        "cart",
-                        existingDoc.id
-                    ),
-                    {
-                        quantity: currentQuantity + 1
-                    }
-                );
+        alert("Quantity updated!");
 
-                alert("Quantity updated!");
+      } else {
 
-            } else {
+        await addDoc(cartRef, {
 
-                await addDoc(cartRef, {
-
-                    productId: button.dataset.id,
-                    name: button.dataset.name,
-                    price: Number(button.dataset.price),
-                    quantity: 1
-
-                });
-
-                alert("Product added to cart!");
-
-            }
+          productId: button.dataset.id,
+          name: button.dataset.name,
+          price: Number(button.dataset.price),
+          quantity: 1
 
         });
 
+        alert("Product added to cart!");
+
+      }
+
     });
+
+  });
 
 }

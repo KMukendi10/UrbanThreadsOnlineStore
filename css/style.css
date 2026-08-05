@@ -373,3 +373,39 @@ main h1 {
     border-color: #2563eb;
 
 }
+/* ===========================
+   Categories
+=========================== */
+
+.categories {
+
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-bottom: 30px;
+
+}
+
+.category-btn {
+
+    padding: 10px 18px;
+    border: none;
+    border-radius: 25px;
+    background: #e5e7eb;
+    cursor: pointer;
+    transition: 0.3s;
+
+}
+
+.category-btn:hover {
+
+    background: #d1d5db;
+
+}
+
+.category-btn.active {
+
+    background: #111827;
+    color: white;
+
+}
