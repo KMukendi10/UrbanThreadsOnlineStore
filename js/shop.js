@@ -25,7 +25,10 @@ let currentUser = null;
 let allProducts = [];
 let selectedCategory = "All";
 
+// ===========================
 // Authentication
+// ===========================
+
 onAuthStateChanged(auth, async (user) => {
 
     if (user) {
@@ -46,7 +49,10 @@ onAuthStateChanged(auth, async (user) => {
 
 });
 
+// ===========================
 // Logout
+// ===========================
+
 logoutBtn.addEventListener("click", async () => {
 
     await signOut(auth);
@@ -55,7 +61,10 @@ logoutBtn.addEventListener("click", async () => {
 
 });
 
+// ===========================
 // Load Products
+// ===========================
+
 async function loadProducts() {
 
     productsContainer.innerHTML = "<p>Loading products...</p>";
@@ -90,7 +99,10 @@ async function loadProducts() {
 
 }
 
+// ===========================
 // Display Products
+// ===========================
+
 function displayProducts(products) {
 
     productsContainer.innerHTML = "";
@@ -107,27 +119,25 @@ function displayProducts(products) {
 
         productsContainer.innerHTML += `
 
-        <div class="product-card">
+            <div class="product-card">
 
-            <img src="${product.imageURL}" alt="${product.name}">
+                <img src="${product.imageURL}" alt="${product.name}">
 
-            <h3>${product.name}</h3>
+                <h3>${product.name}</h3>
 
-            <p>${product.description}</p>
+                <p>${product.description}</p>
 
-            <h4>R${Number(product.price).toFixed(2)}</h4>
+                <h4>R${Number(product.price).toFixed(2)}</h4>
 
-            <button
-                class="add-cart-btn"
-                data-id="${product.id}"
-                data-name="${product.name}"
-                data-price="${product.price}">
+                <button
+                    class="add-cart-btn"
+                    data-id="${product.id}">
 
-                Add to Cart
+                    Add to Cart
 
-            </button>
+                </button>
 
-        </div>
+            </div>
 
         `;
 
@@ -137,7 +147,10 @@ function displayProducts(products) {
 
 }
 
-// Filter Products
+// ===========================
+// Search + Category Filter
+// ===========================
+
 function filterProducts() {
 
     const search = searchInput.value.toLowerCase().trim();
@@ -165,7 +178,8 @@ document.querySelectorAll(".category-btn").forEach((button) => {
 
     button.addEventListener("click", () => {
 
-        document.querySelectorAll(".category-btn")
+        document
+            .querySelectorAll(".category-btn")
             .forEach(btn => btn.classList.remove("active"));
 
         button.classList.add("active");
@@ -178,7 +192,10 @@ document.querySelectorAll(".category-btn").forEach((button) => {
 
 });
 
-// Load Cart Count
+// ===========================
+// Cart Counter
+// ===========================
+
 async function loadCartCount() {
 
     const snapshot = await getDocs(
@@ -197,7 +214,10 @@ async function loadCartCount() {
 
 }
 
+// ===========================
 // Add To Cart
+// ===========================
+
 function addCartEvents() {
 
     const buttons = document.querySelectorAll(".add-cart-btn");
@@ -205,6 +225,11 @@ function addCartEvents() {
     buttons.forEach((button) => {
 
         button.addEventListener("click", async () => {
+
+            // Find the selected product
+            const product = allProducts.find(
+                item => item.id === button.dataset.id
+            );
 
             const cartRef = collection(
                 db,
@@ -215,7 +240,7 @@ function addCartEvents() {
 
             const q = query(
                 cartRef,
-                where("productId", "==", button.dataset.id)
+                where("productId", "==", product.id)
             );
 
             const snapshot = await getDocs(q);
@@ -241,9 +266,12 @@ function addCartEvents() {
 
                 await addDoc(cartRef, {
 
-                    productId: button.dataset.id,
-                    name: button.dataset.name,
-                    price: Number(button.dataset.price),
+                    productId: product.id,
+                    name: product.name,
+                    price: Number(product.price),
+                    imageURL: product.imageURL,
+                    category: product.category,
+                    description: product.description,
                     quantity: 1
 
                 });
@@ -252,7 +280,7 @@ function addCartEvents() {
 
             await loadCartCount();
 
-            alert("Cart updated!");
+            alert("Product added to cart!");
 
         });
 
