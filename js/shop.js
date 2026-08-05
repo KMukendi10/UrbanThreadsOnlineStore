@@ -1,18 +1,18 @@
 import { auth, db } from "./firebase-config.js";
 
 import {
-  onAuthStateChanged,
-  signOut
+    onAuthStateChanged,
+    signOut
 } from "https://www.gstatic.com/firebasejs/12.17.1/firebase-auth.js";
 
 import {
-  collection,
-  getDocs,
-  addDoc,
-  query,
-  where,
-  updateDoc,
-  doc
+    collection,
+    getDocs,
+    addDoc,
+    query,
+    where,
+    updateDoc,
+    doc
 } from "https://www.gstatic.com/firebasejs/12.17.1/firebase-firestore.js";
 
 const userEmail = document.getElementById("user-email");
@@ -80,7 +80,6 @@ async function loadProducts() {
             allProducts.push({
 
                 id: doc.id,
-
                 ...doc.data()
 
             });
@@ -109,7 +108,11 @@ function displayProducts(products) {
 
     if (products.length === 0) {
 
-        productsContainer.innerHTML = "<p>No products found.</p>";
+        productsContainer.innerHTML = `
+            <div class="empty-state">
+                No products found.
+            </div>
+        `;
 
         return;
 
@@ -123,19 +126,31 @@ function displayProducts(products) {
 
                 <img src="${product.imageURL}" alt="${product.name}">
 
-                <h3>${product.name}</h3>
+                <div class="product-info">
 
-                <p>${product.description}</p>
+                    <span class="product-category">
+                        ${product.category}
+                    </span>
 
-                <h4>R${Number(product.price).toFixed(2)}</h4>
+                    <h3>${product.name}</h3>
 
-                <button
-                    class="add-cart-btn"
-                    data-id="${product.id}">
+                    <p>${product.description}</p>
 
-                    Add to Cart
+                    <div class="product-bottom">
 
-                </button>
+                        <span class="product-price">
+                            R${Number(product.price).toFixed(2)}
+                        </span>
+
+                        <button
+                            class="add-cart-btn"
+                            data-id="${product.id}">
+                            Add
+                        </button>
+
+                    </div>
+
+                </div>
 
             </div>
 
@@ -226,7 +241,6 @@ function addCartEvents() {
 
         button.addEventListener("click", async () => {
 
-            // Find the selected product
             const product = allProducts.find(
                 item => item.id === button.dataset.id
             );
