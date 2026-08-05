@@ -4,20 +4,20 @@ import { auth } from "./firebase-config.js";
 
 import {
   createUserWithEmailAndPassword,
-  signInWithEmailAndPassword
+  signInWithEmailAndPassword,
 } from "https://www.gstatic.com/firebasejs/12.17.1/firebase-auth.js";
 
-// Get elements from the page
+// HTML Elements
 const form = document.getElementById("auth-form");
 const emailInput = document.getElementById("email");
 const passwordInput = document.getElementById("password");
-const loginBtn = document.getElementById("login-btn");
 const signupBtn = document.getElementById("signup-btn");
 const message = document.getElementById("message");
 
-// ----------------------------
+// ---------------------
 // LOGIN
-// ----------------------------
+// ---------------------
+
 form.addEventListener("submit", async (event) => {
   event.preventDefault();
 
@@ -28,19 +28,22 @@ form.addEventListener("submit", async (event) => {
     await signInWithEmailAndPassword(auth, email, password);
 
     message.style.color = "green";
-    message.textContent = "Login successful!";
+    message.textContent = "Login successful! Redirecting...";
+
+    setTimeout(() => {
+      window.location.href = "../shop.html";
+    }, 1000);
 
   } catch (error) {
-
     message.style.color = "red";
     message.textContent = error.message;
-
   }
 });
 
-// ----------------------------
-// SIGN UP
-// ----------------------------
+// ---------------------
+// CREATE ACCOUNT
+// ---------------------
+
 signupBtn.addEventListener("click", async () => {
 
   const email = emailInput.value.trim();
@@ -55,7 +58,12 @@ signupBtn.addEventListener("click", async () => {
     );
 
     message.style.color = "green";
-    message.textContent = "Account created successfully!";
+    message.textContent =
+      "Account created successfully! Redirecting...";
+
+    setTimeout(() => {
+      window.location.href = "../shop.html";
+    }, 1000);
 
   } catch (error) {
 
