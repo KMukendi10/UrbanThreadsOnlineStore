@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Urban Threads | Login</title>
+
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+    <main class="auth-container">
+
+        <div class="auth-card">
+
+            <h1>Urban Threads</h1>
+
+            <p>Create an account or log in.</p>
+
+            <form id="auth-form">
+
+                <input
+                    type="email"
+                    id="email"
+                    placeholder="Email Address"
+                    required
+                >
+
+                <input
+                    type="password"
+                    id="password"
+                    placeholder="Password"
+                    required
+                >
+
+                <button type="submit" id="login-btn">
+                    Login
+                </button>
+
+                <button type="button" id="signup-btn">
+                    Create Account
+                </button>
+
+            </form>
+
+            <p id="message"></p>
+
+        </div>
+
+    </main>
+
+    <script type="module" src="js/auth.js"></script>
+
+</body>
+</html>
