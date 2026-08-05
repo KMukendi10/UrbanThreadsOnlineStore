@@ -1,23 +1,23 @@
 // firebase-config.js
 
-// Import the Firebase services we need
+// Import Firebase modules
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.17.1/firebase-app.js";
 import { getAuth } from "https://www.gstatic.com/firebasejs/12.17.1/firebase-auth.js";
 import { getFirestore } from "https://www.gstatic.com/firebasejs/12.17.1/firebase-firestore.js";
 
-// Firebase project configuration
+// Firebase configuration
 const firebaseConfig = {
-  apiKey: "AIzaSyAk3tGMohIQKMj_mRp6ZlOwSEcnFtZKqZ4",
-  authDomain: "urbanthreadsstore-1a093.firebaseapp.com",
-  projectId: "urbanthreadsstore-1a093",
-  storageBucket: "urbanthreadsstore-1a093.firebasestorage.app",
-  messagingSenderId: "268375787140",
-  appId: "1:268375787140:web:dd685947b8060f21cca4d1"
+  apiKey: "AIzaSyDqT_TzmeUHWsH_WAyKz5b94BoSI5hI63g",
+  authDomain: "urbanthreadsstore-7168d.firebaseapp.com",
+  projectId: "urbanthreadsstore-7168d",
+  storageBucket: "urbanthreadsstore-7168d.firebasestorage.app",
+  messagingSenderId: "457468107070",
+  appId: "1:457468107070:web:f0496aea0986f9b22f346f"
 };
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 
-// Export Authentication and Firestore
+// Export Firebase services
 export const auth = getAuth(app);
 export const db = getFirestore(app);
