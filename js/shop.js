@@ -18,6 +18,9 @@ import {
 const userEmail = document.getElementById("user-email");
 const logoutBtn = document.getElementById("logout-btn");
 const productsContainer = document.getElementById("products");
+const searchInput = document.getElementById("search");
+
+let allProducts = [];
 
 let currentUser = null;
 

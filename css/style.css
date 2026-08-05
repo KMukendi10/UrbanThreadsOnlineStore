@@ -349,3 +349,27 @@ main h1 {
     color: #2563eb;
 
 }
+
+#search {
+
+    width: 100%;
+
+    padding: 14px;
+
+    margin: 25px 0;
+
+    font-size: 16px;
+
+    border: 1px solid #ccc;
+
+    border-radius: 8px;
+
+    outline: none;
+
+}
+
+#search:focus {
+
+    border-color: #2563eb;
+
+}
