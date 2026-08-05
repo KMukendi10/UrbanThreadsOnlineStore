@@ -727,6 +727,80 @@ nav .nav-container{
 }
 
 /* ==========================================
+   CART PAGE
+========================================== */
+
+#cart-items {
+    margin-top: 30px;
+}
+
+.cart-card {
+    display: flex;
+    gap: 25px;
+    align-items: center;
+    background: white;
+    border: 2px solid #111;
+    padding: 20px;
+    margin-bottom: 25px;
+    transition: 0.3s;
+}
+
+.cart-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 8px 8px 0 #111;
+}
+
+.cart-image {
+    width: 170px;
+    height: 170px;
+    object-fit: cover;
+    border: 2px solid #111;
+}
+
+.cart-details {
+    flex: 1;
+}
+
+.cart-details h3 {
+    font-family: "Anton", sans-serif;
+    font-size: 30px;
+    margin-bottom: 10px;
+    text-transform: uppercase;
+}
+
+.cart-details p {
+    margin-bottom: 8px;
+    color: #555;
+}
+
+.cart-price {
+    color: #2563eb;
+    font-size: 22px;
+    font-weight: bold;
+    margin: 15px 0;
+}
+
+.remove-btn {
+    background: #dc2626;
+    color: white;
+    padding: 12px 20px;
+    border: none;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.remove-btn:hover {
+    background: #b91c1c;
+}
+
+#cart-total {
+    text-align: right;
+    margin-top: 35px;
+    font-size: 40px;
+    font-family: "Anton", sans-serif;
+}
+
+/* ==========================================
    FOOTER
 ========================================== */
 
@@ -750,6 +824,91 @@ footer p {
     margin-top: 10px;
     font-family: "Space Mono", monospace;
     font-size: 13px;
+}
+
+/* ==========================================
+   LOGIN PAGE
+========================================== */
+
+.login-page {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    min-height: calc(100vh - 80px);
+}
+
+.login-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.login-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 60px;
+    background: white;
+}
+
+.login-container h1 {
+    font-family: "Anton", sans-serif;
+    font-size: 60px;
+    text-transform: uppercase;
+    margin-bottom: 15px;
+}
+
+.login-container p {
+    color: #555;
+    margin-bottom: 30px;
+}
+
+.login-container form {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+}
+
+.login-container input {
+    padding: 15px;
+    border: 2px solid #111;
+    font-size: 16px;
+}
+
+.login-container input:focus {
+    outline: none;
+    border-color: #2563eb;
+}
+
+#login-message {
+    margin-top: 15px;
+    color: #dc2626;
+    font-weight: bold;
+}
+
+.login-container hr {
+    margin: 35px 0;
+}
+
+.login-container h2 {
+    font-family: "Anton", sans-serif;
+    font-size: 30px;
+    margin-bottom: 15px;
+}
+
+@media (max-width: 900px) {
+
+    .login-page {
+        grid-template-columns: 1fr;
+    }
+
+    .login-image {
+        display: none;
+    }
+
+    .login-container {
+        padding: 40px 25px;
+    }
+
 }
 
 /* ==========================================

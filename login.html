@@ -1,71 +1,122 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
     <title>Urban Threads | Login</title>
 
     <link rel="stylesheet" href="css/style.css">
+
 </head>
 <body>
 
+    <!-- ==========================
+         Navigation
+    =========================== -->
+
     <nav>
-        
-        <h2>Urban Threads</h2>
-    
-        <div class="nav-links">
-    
-            <a href="index.html">Home</a>
-    
-            <a href="shop.html">Shop</a>
-    
-            <a href="login.html">Login</a>
-    
+
+        <div class="nav-container">
+
+            <div class="logo">
+
+                <div class="logo-circle"></div>
+
+                Urban Threads
+
+            </div>
+
+            <div class="nav-links">
+
+                <a href="index.html">Home</a>
+                <a href="shop.html">Shop</a>
+                <a href="login.html">Login</a>
+
+            </div>
+
         </div>
-    
+
     </nav>
 
-    <main class="auth-container">
+    <!-- ==========================
+         Login Section
+    =========================== -->
 
-        <div class="auth-card">
+    <section class="login-page">
 
-            <h1>Urban Threads</h1>
+        <div class="login-image">
 
-            <p>Create an account or log in.</p>
+            <img
+                src="https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=900"
+                alt="Urban Threads">
 
-            <form id="auth-form">
+        </div>
+
+        <div class="login-container">
+
+            <h1>
+
+                Welcome Back
+
+            </h1>
+
+            <p>
+
+                Login to continue shopping at Urban Threads.
+
+            </p>
+
+            <form id="login-form">
 
                 <input
                     type="email"
                     id="email"
                     placeholder="Email Address"
-                    required
-                >
+                    required>
 
                 <input
                     type="password"
                     id="password"
                     placeholder="Password"
-                    required
-                >
+                    required>
 
-                <button type="submit" id="login-btn">
+                <button
+                    type="submit"
+                    class="btn btn-primary">
+
                     Login
-                </button>
 
-                <button type="button" id="signup-btn">
-                    Create Account
                 </button>
 
             </form>
 
-            <p id="message"></p>
+            <p id="login-message"></p>
+
+            <hr>
+
+            <h2>
+
+                New Customer?
+
+            </h2>
+
+            <button
+                id="register-btn"
+                class="btn btn-outline">
+
+                Create Account
+
+            </button>
 
         </div>
 
-    </main>
+    </section>
 
-    <script type="module" src="js/auth.js"></script>
+    <script type="module" src="js/login.js"></script>
 
 </body>
 </html>

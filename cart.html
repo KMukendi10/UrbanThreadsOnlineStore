@@ -1,45 +1,112 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <title>Urban Threads | Cart</title>
 
     <link rel="stylesheet" href="css/style.css">
+
 </head>
 <body>
 
+    <!-- ==========================
+         Navigation
+    =========================== -->
+
     <nav>
 
-        <h2>Urban Threads</h2>
+        <div class="nav-container">
 
-        <div class="nav-links">
+            <div class="logo">
 
-            <a href="index.html">Home</a>
+                <div class="logo-circle"></div>
 
-            <a href="shop.html">Shop</a>
+                Urban Threads
 
-            <a href="cart.html">Cart</a>
+            </div>
 
-            <span id="user-email"></span>
+            <div class="nav-links">
 
-            <button id="logout-btn">
-                Logout
-            </button>
+                <a href="index.html">Home</a>
+                <a href="shop.html">Shop</a>
+                <a href="cart.html">Cart</a>
+
+            </div>
+
+            <div class="nav-right">
+
+                <span id="user-email"></span>
+
+                <button
+                    id="logout-btn"
+                    class="btn btn-primary">
+
+                    Logout
+
+                </button>
+
+            </div>
 
         </div>
 
     </nav>
 
+    <!-- ==========================
+         Cart
+    =========================== -->
+
     <main>
 
-        <h1>Your Shopping Cart</h1>
+        <section class="shop-header">
 
-        <section id="cart-items"></section>
+            <h1>Your Cart</h1>
 
-        <h2 id="cart-total">Total: R0.00</h2>
+            <p>
+
+                Review your selected items before checkout.
+
+            </p>
+
+        </section>
+
+        <section id="cart-items">
+
+        </section>
+
+        <h2 id="cart-total">
+            Total: R0.00
+        </h2>
 
     </main>
+
+    <!-- ==========================
+         Footer
+    =========================== -->
+
+    <footer>
+
+        <h2>
+
+            Urban Threads
+
+        </h2>
+
+        <p>
+
+            Premium Streetwear • Built with HTML, CSS, JavaScript & Firebase
+
+        </p>
+
+        <p>
+
+            © 2026 Urban Threads. All Rights Reserved.
+
+        </p>
+
+    </footer>
 
     <script type="module" src="js/cart.js"></script>
 

@@ -19,6 +19,10 @@ const cartTotal = document.getElementById("cart-total");
 
 let currentUser = null;
 
+// ===========================
+// Authentication
+// ===========================
+
 onAuthStateChanged(auth, (user) => {
 
     if (user) {
@@ -37,6 +41,10 @@ onAuthStateChanged(auth, (user) => {
 
 });
 
+// ===========================
+// Logout
+// ===========================
+
 logoutBtn.addEventListener("click", async () => {
 
     await signOut(auth);
@@ -44,6 +52,10 @@ logoutBtn.addEventListener("click", async () => {
     window.location.href = "login.html";
 
 });
+
+// ===========================
+// Load Cart
+// ===========================
 
 async function loadCart() {
 
@@ -57,7 +69,12 @@ async function loadCart() {
 
     if (snapshot.empty) {
 
-        cartItems.innerHTML = "<p>Your cart is empty.</p>";
+        cartItems.innerHTML = `
+            <div class="empty-state">
+                <h2>Your cart is empty.</h2>
+                <p>Add some products from the shop.</p>
+            </div>
+        `;
 
         cartTotal.textContent = "Total: R0.00";
 
@@ -75,35 +92,53 @@ async function loadCart() {
 
         cartItems.innerHTML += `
 
-        <div class="cart-card">
+            <div class="cart-card fade-in">
 
-            <img
-                src="${product.imageURL}"
-                alt="${product.name}"
-                class="cart-image"
-            >
+                <img
+                    src="${product.imageURL}"
+                    alt="${product.name}"
+                    class="cart-image"
+                >
 
-            <div class="cart-details">
+                <div class="cart-details">
 
-                <h3>${product.name}</h3>
+                    <h3>${product.name}</h3>
 
-                <p>Price: R${product.price.toFixed(2)}</p>
+                    <p>${product.description}</p>
 
-                <p>Quantity: ${product.quantity}</p>
+                    <p>Category: ${product.category}</p>
 
-                <p>Subtotal: R${subtotal.toFixed(2)}</p>
+                    <div class="cart-price">
 
-                <button
-                    class="remove-btn"
-                    data-id="${item.id}">
+                        R${product.price.toFixed(2)}
 
-                    Remove
+                    </div>
 
-                </button>
+                    <p>
+
+                        Quantity:
+                        <strong>${product.quantity}</strong>
+
+                    </p>
+
+                    <p>
+
+                        Subtotal:
+                        <strong>R${subtotal.toFixed(2)}</strong>
+
+                    </p>
+
+                    <button
+                        class="remove-btn"
+                        data-id="${item.id}">
+
+                        Remove Item
+
+                    </button>
+
+                </div>
 
             </div>
-
-        </div>
 
         `;
 
@@ -115,9 +150,15 @@ async function loadCart() {
 
 }
 
+// ===========================
+// Remove Item
+// ===========================
+
 function addRemoveEvents() {
 
-    document.querySelectorAll(".remove-btn").forEach((button) => {
+    const buttons = document.querySelectorAll(".remove-btn");
+
+    buttons.forEach((button) => {
 
         button.addEventListener("click", async () => {
 
