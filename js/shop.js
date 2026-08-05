@@ -8,7 +8,11 @@ import {
 import {
   collection,
   getDocs,
-  addDoc
+  addDoc,
+  query,
+  where,
+  updateDoc,
+  doc
 } from "https://www.gstatic.com/firebasejs/12.17.1/firebase-firestore.js";
 
 const userEmail = document.getElementById("user-email");
@@ -113,41 +117,64 @@ async function loadProducts() {
 
 function addCartEvents() {
 
-  const buttons = document.querySelectorAll(".add-cart-btn");
+    const buttons = document.querySelectorAll(".add-cart-btn");
 
-  buttons.forEach((button) => {
+    buttons.forEach((button) => {
 
-    button.addEventListener("click", async () => {
+        button.addEventListener("click", async () => {
 
-      const product = {
+            const cartRef = collection(
+                db,
+                "users",
+                currentUser.uid,
+                "cart"
+            );
 
-        productId: button.dataset.id,
-        name: button.dataset.name,
-        price: Number(button.dataset.price),
-        quantity: 1
+            const q = query(
+                cartRef,
+                where("productId", "==", button.dataset.id)
+            );
 
-      };
+            const snapshot = await getDocs(q);
 
-      try {
+            if (!snapshot.empty) {
 
-        await addDoc(
+                const existingDoc = snapshot.docs[0];
 
-          collection(db, "users", currentUser.uid, "cart"),
+                const currentQuantity = existingDoc.data().quantity;
 
-          product
+                await updateDoc(
+                    doc(
+                        db,
+                        "users",
+                        currentUser.uid,
+                        "cart",
+                        existingDoc.id
+                    ),
+                    {
+                        quantity: currentQuantity + 1
+                    }
+                );
 
-        );
+                alert("Quantity updated!");
 
-        alert("Product added to cart!");
+            } else {
 
-      } catch (error) {
+                await addDoc(cartRef, {
 
-        console.error(error);
+                    productId: button.dataset.id,
+                    name: button.dataset.name,
+                    price: Number(button.dataset.price),
+                    quantity: 1
 
-      }
+                });
+
+                alert("Product added to cart!");
+
+            }
+
+        });
 
     });
-
-  });
 
 }
