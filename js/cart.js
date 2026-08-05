@@ -1,15 +1,15 @@
 import { auth, db } from "./firebase-config.js";
 
 import {
-  onAuthStateChanged,
-  signOut
+    onAuthStateChanged,
+    signOut
 } from "https://www.gstatic.com/firebasejs/12.17.1/firebase-auth.js";
 
 import {
-  collection,
-  getDocs,
-  deleteDoc,
-  doc
+    collection,
+    getDocs,
+    deleteDoc,
+    doc
 } from "https://www.gstatic.com/firebasejs/12.17.1/firebase-firestore.js";
 
 const userEmail = document.getElementById("user-email");
@@ -19,7 +19,6 @@ const cartTotal = document.getElementById("cart-total");
 
 let currentUser = null;
 
-// Check authentication
 onAuthStateChanged(auth, (user) => {
 
     if (user) {
@@ -38,7 +37,6 @@ onAuthStateChanged(auth, (user) => {
 
 });
 
-// Logout
 logoutBtn.addEventListener("click", async () => {
 
     await signOut(auth);
@@ -47,7 +45,6 @@ logoutBtn.addEventListener("click", async () => {
 
 });
 
-// Load cart
 async function loadCart() {
 
     cartItems.innerHTML = "";
@@ -78,11 +75,19 @@ async function loadCart() {
 
         cartItems.innerHTML += `
 
-            <div class="cart-item">
+        <div class="cart-card">
+
+            <img
+                src="${product.imageURL}"
+                alt="${product.name}"
+                class="cart-image"
+            >
+
+            <div class="cart-details">
 
                 <h3>${product.name}</h3>
 
-                <p>Price: R${product.price}</p>
+                <p>Price: R${product.price.toFixed(2)}</p>
 
                 <p>Quantity: ${product.quantity}</p>
 
@@ -91,10 +96,14 @@ async function loadCart() {
                 <button
                     class="remove-btn"
                     data-id="${item.id}">
+
                     Remove
+
                 </button>
 
             </div>
+
+        </div>
 
         `;
 
@@ -106,12 +115,9 @@ async function loadCart() {
 
 }
 
-// Remove item
 function addRemoveEvents() {
 
-    const buttons = document.querySelectorAll(".remove-btn");
-
-    buttons.forEach((button) => {
+    document.querySelectorAll(".remove-btn").forEach((button) => {
 
         button.addEventListener("click", async () => {
 

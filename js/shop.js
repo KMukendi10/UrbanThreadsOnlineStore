@@ -19,134 +19,143 @@ const userEmail = document.getElementById("user-email");
 const logoutBtn = document.getElementById("logout-btn");
 const productsContainer = document.getElementById("products");
 const searchInput = document.getElementById("search");
+const cartCount = document.getElementById("cart-count");
 
 let currentUser = null;
 let allProducts = [];
 let selectedCategory = "All";
 
 // Authentication
-onAuthStateChanged(auth, (user) => {
+onAuthStateChanged(auth, async (user) => {
 
-  if (user) {
+    if (user) {
 
-    currentUser = user;
-    userEmail.textContent = user.email;
-    loadProducts();
+        currentUser = user;
 
-  } else {
+        userEmail.textContent = user.email;
 
-    window.location.href = "login.html";
+        await loadProducts();
 
-  }
+        await loadCartCount();
+
+    } else {
+
+        window.location.href = "login.html";
+
+    }
 
 });
 
 // Logout
 logoutBtn.addEventListener("click", async () => {
 
-  await signOut(auth);
+    await signOut(auth);
 
-  window.location.href = "login.html";
+    window.location.href = "login.html";
 
 });
 
 // Load Products
 async function loadProducts() {
 
-  productsContainer.innerHTML = "<p>Loading products...</p>";
+    productsContainer.innerHTML = "<p>Loading products...</p>";
 
-  try {
+    try {
 
-    const querySnapshot = await getDocs(collection(db, "products"));
+        const querySnapshot = await getDocs(collection(db, "products"));
 
-    allProducts = [];
+        allProducts = [];
 
-    querySnapshot.forEach((doc) => {
+        querySnapshot.forEach((doc) => {
 
-      allProducts.push({
-        id: doc.id,
-        ...doc.data()
-      });
+            allProducts.push({
 
-    });
+                id: doc.id,
 
-    filterProducts();
+                ...doc.data()
 
-  } catch (error) {
+            });
 
-    console.error(error);
+        });
 
-    productsContainer.innerHTML = "<p>Unable to load products.</p>";
+        filterProducts();
 
-  }
+    } catch (error) {
+
+        console.error(error);
+
+        productsContainer.innerHTML = "<p>Unable to load products.</p>";
+
+    }
 
 }
 
 // Display Products
 function displayProducts(products) {
 
-  productsContainer.innerHTML = "";
+    productsContainer.innerHTML = "";
 
-  if (products.length === 0) {
+    if (products.length === 0) {
 
-    productsContainer.innerHTML = "<p>No products found.</p>";
-    return;
+        productsContainer.innerHTML = "<p>No products found.</p>";
 
-  }
+        return;
 
-  products.forEach((product) => {
+    }
 
-    productsContainer.innerHTML += `
+    products.forEach((product) => {
 
-      <div class="product-card">
+        productsContainer.innerHTML += `
 
-        <img src="${product.imageURL}" alt="${product.name}">
+        <div class="product-card">
 
-        <h3>${product.name}</h3>
+            <img src="${product.imageURL}" alt="${product.name}">
 
-        <p>${product.description}</p>
+            <h3>${product.name}</h3>
 
-        <h4>R${Number(product.price).toFixed(2)}</h4>
+            <p>${product.description}</p>
 
-        <button
-          class="add-cart-btn"
-          data-id="${product.id}"
-          data-name="${product.name}"
-          data-price="${product.price}">
+            <h4>R${Number(product.price).toFixed(2)}</h4>
 
-          Add to Cart
+            <button
+                class="add-cart-btn"
+                data-id="${product.id}"
+                data-name="${product.name}"
+                data-price="${product.price}">
 
-        </button>
+                Add to Cart
 
-      </div>
+            </button>
 
-    `;
+        </div>
 
-  });
+        `;
 
-  addCartEvents();
+    });
+
+    addCartEvents();
 
 }
 
-// Search + Category Filter
+// Filter Products
 function filterProducts() {
 
-  const search = searchInput.value.toLowerCase().trim();
+    const search = searchInput.value.toLowerCase().trim();
 
-  const filteredProducts = allProducts.filter((product) => {
+    const filteredProducts = allProducts.filter((product) => {
 
-    const matchesSearch =
-      product.name.toLowerCase().includes(search);
+        const matchesSearch =
+            product.name.toLowerCase().includes(search);
 
-    const matchesCategory =
-      selectedCategory === "All" ||
-      product.category === selectedCategory;
+        const matchesCategory =
+            selectedCategory === "All" ||
+            product.category === selectedCategory;
 
-    return matchesSearch && matchesCategory;
+        return matchesSearch && matchesCategory;
 
-  });
+    });
 
-  displayProducts(filteredProducts);
+    displayProducts(filteredProducts);
 
 }
 
@@ -154,81 +163,99 @@ searchInput.addEventListener("input", filterProducts);
 
 document.querySelectorAll(".category-btn").forEach((button) => {
 
-  button.addEventListener("click", () => {
+    button.addEventListener("click", () => {
 
-    document
-      .querySelectorAll(".category-btn")
-      .forEach(btn => btn.classList.remove("active"));
+        document.querySelectorAll(".category-btn")
+            .forEach(btn => btn.classList.remove("active"));
 
-    button.classList.add("active");
+        button.classList.add("active");
 
-    selectedCategory = button.dataset.category;
+        selectedCategory = button.dataset.category;
 
-    filterProducts();
+        filterProducts();
 
-  });
+    });
 
 });
+
+// Load Cart Count
+async function loadCartCount() {
+
+    const snapshot = await getDocs(
+        collection(db, "users", currentUser.uid, "cart")
+    );
+
+    let totalItems = 0;
+
+    snapshot.forEach((doc) => {
+
+        totalItems += doc.data().quantity;
+
+    });
+
+    cartCount.textContent = totalItems;
+
+}
 
 // Add To Cart
 function addCartEvents() {
 
-  const buttons = document.querySelectorAll(".add-cart-btn");
+    const buttons = document.querySelectorAll(".add-cart-btn");
 
-  buttons.forEach((button) => {
+    buttons.forEach((button) => {
 
-    button.addEventListener("click", async () => {
+        button.addEventListener("click", async () => {
 
-      const cartRef = collection(
-        db,
-        "users",
-        currentUser.uid,
-        "cart"
-      );
+            const cartRef = collection(
+                db,
+                "users",
+                currentUser.uid,
+                "cart"
+            );
 
-      const q = query(
-        cartRef,
-        where("productId", "==", button.dataset.id)
-      );
+            const q = query(
+                cartRef,
+                where("productId", "==", button.dataset.id)
+            );
 
-      const snapshot = await getDocs(q);
+            const snapshot = await getDocs(q);
 
-      if (!snapshot.empty) {
+            if (!snapshot.empty) {
 
-        const existingDoc = snapshot.docs[0];
+                const existingDoc = snapshot.docs[0];
 
-        await updateDoc(
-          doc(
-            db,
-            "users",
-            currentUser.uid,
-            "cart",
-            existingDoc.id
-          ),
-          {
-            quantity: existingDoc.data().quantity + 1
-          }
-        );
+                await updateDoc(
+                    doc(
+                        db,
+                        "users",
+                        currentUser.uid,
+                        "cart",
+                        existingDoc.id
+                    ),
+                    {
+                        quantity: existingDoc.data().quantity + 1
+                    }
+                );
 
-        alert("Quantity updated!");
+            } else {
 
-      } else {
+                await addDoc(cartRef, {
 
-        await addDoc(cartRef, {
+                    productId: button.dataset.id,
+                    name: button.dataset.name,
+                    price: Number(button.dataset.price),
+                    quantity: 1
 
-          productId: button.dataset.id,
-          name: button.dataset.name,
-          price: Number(button.dataset.price),
-          quantity: 1
+                });
+
+            }
+
+            await loadCartCount();
+
+            alert("Cart updated!");
 
         });
 
-        alert("Product added to cart!");
-
-      }
-
     });
-
-  });
 
 }
