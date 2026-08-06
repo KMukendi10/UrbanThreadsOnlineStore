@@ -131,9 +131,6 @@ async function loadCart() {
                             class="qty-btn decrease-btn"
                             data-id="${item.id}"
                             data-quantity="${product.quantity}">
-
-                            −
-
                         </button>
 
                         <span class="quantity">
