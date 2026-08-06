@@ -2,6 +2,14 @@
 <html lang="en">
 <head>
 
+    <script>
+        (function () {
+            var stored = localStorage.getItem("ut-theme");
+            var theme = stored || (window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
+            document.documentElement.setAttribute("data-theme", theme);
+        })();
+    </script>
+
     <meta charset="UTF-8">
 
     <meta name="viewport"
@@ -39,6 +47,8 @@
             </div>
 
             <div class="nav-right">
+
+                <button id="theme-toggle" class="theme-toggle" type="button" aria-label="Toggle dark mode">🌙</button>
 
                 <span id="user-email"></span>
 
@@ -123,6 +133,8 @@
         </p>
 
     </footer>
+
+    <script type="module" src="js/theme.js"></script>
 
     <script type="module" src="js/cart.js"></script>
 

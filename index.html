@@ -2,6 +2,14 @@
 <html lang="en">
 <head>
 
+    <script>
+        (function () {
+            var stored = localStorage.getItem("ut-theme");
+            var theme = stored || (window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
+            document.documentElement.setAttribute("data-theme", theme);
+        })();
+    </script>
+
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
@@ -33,6 +41,12 @@
                 <a href="index.html">Home</a>
                 <a href="shop.html">Shop</a>
                 <a href="login.html">Login</a>
+
+            </div>
+
+            <div class="nav-right">
+
+                <button id="theme-toggle" class="theme-toggle" type="button" aria-label="Toggle dark mode">🌙</button>
 
             </div>
 
@@ -202,6 +216,8 @@
         </p>
 
     </footer>
+
+    <script type="module" src="js/theme.js"></script>
 
 </body>
 </html>
