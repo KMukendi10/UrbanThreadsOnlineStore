@@ -9,13 +9,15 @@ import {
     collection,
     getDocs,
     deleteDoc,
-    doc
+    doc,
+    updateDoc
 } from "https://www.gstatic.com/firebasejs/12.17.1/firebase-firestore.js";
 
 const userEmail = document.getElementById("user-email");
 const logoutBtn = document.getElementById("logout-btn");
 const cartItems = document.getElementById("cart-items");
 const cartTotal = document.getElementById("cart-total");
+const checkoutBtn = document.getElementById("checkout-btn");
 
 let currentUser = null;
 
@@ -70,17 +72,26 @@ async function loadCart() {
     if (snapshot.empty) {
 
         cartItems.innerHTML = `
+
             <div class="empty-state">
+
                 <h2>Your cart is empty.</h2>
+
                 <p>Add some products from the shop.</p>
+
             </div>
+
         `;
 
         cartTotal.textContent = "Total: R0.00";
 
+        checkoutBtn.disabled = true;
+
         return;
 
     }
+
+    checkoutBtn.disabled = false;
 
     snapshot.forEach((item) => {
 
@@ -114,17 +125,42 @@ async function loadCart() {
 
                     </div>
 
+                    <div class="quantity-controls">
+
+                        <button
+                            class="qty-btn decrease-btn"
+                            data-id="${item.id}"
+                            data-quantity="${product.quantity}">
+
+                            −
+
+                        </button>
+
+                        <span class="quantity">
+
+                            ${product.quantity}
+
+                        </span>
+
+                        <button
+                            class="qty-btn increase-btn"
+                            data-id="${item.id}"
+                            data-quantity="${product.quantity}">
+
+                            +
+
+                        </button>
+
+                    </div>
+
                     <p>
 
-                        Quantity:
-                        <strong>${product.quantity}</strong>
+                        <strong>
 
-                    </p>
+                            Subtotal:
+                            R${subtotal.toFixed(2)}
 
-                    <p>
-
-                        Subtotal:
-                        <strong>R${subtotal.toFixed(2)}</strong>
+                        </strong>
 
                     </p>
 
@@ -146,7 +182,95 @@ async function loadCart() {
 
     cartTotal.textContent = `Total: R${total.toFixed(2)}`;
 
+    addQuantityEvents();
+
     addRemoveEvents();
+
+}
+
+// ===========================
+// Quantity Buttons
+// ===========================
+
+function addQuantityEvents() {
+
+    const increaseButtons = document.querySelectorAll(".increase-btn");
+
+    const decreaseButtons = document.querySelectorAll(".decrease-btn");
+
+    increaseButtons.forEach((button) => {
+
+        button.addEventListener("click", async () => {
+
+            const quantity = Number(button.dataset.quantity);
+
+            await updateDoc(
+
+                doc(
+                    db,
+                    "users",
+                    currentUser.uid,
+                    "cart",
+                    button.dataset.id
+                ),
+
+                {
+                    quantity: quantity + 1
+                }
+
+            );
+
+            loadCart();
+
+        });
+
+    });
+
+    decreaseButtons.forEach((button) => {
+
+        button.addEventListener("click", async () => {
+
+            const quantity = Number(button.dataset.quantity);
+
+            if (quantity <= 1) {
+
+                await deleteDoc(
+
+                    doc(
+                        db,
+                        "users",
+                        currentUser.uid,
+                        "cart",
+                        button.dataset.id
+                    )
+
+                );
+
+            } else {
+
+                await updateDoc(
+
+                    doc(
+                        db,
+                        "users",
+                        currentUser.uid,
+                        "cart",
+                        button.dataset.id
+                    ),
+
+                    {
+                        quantity: quantity - 1
+                    }
+
+                );
+
+            }
+
+            loadCart();
+
+        });
+
+    });
 
 }
 
@@ -163,6 +287,7 @@ function addRemoveEvents() {
         button.addEventListener("click", async () => {
 
             await deleteDoc(
+
                 doc(
                     db,
                     "users",
@@ -170,6 +295,7 @@ function addRemoveEvents() {
                     "cart",
                     button.dataset.id
                 )
+
             );
 
             loadCart();
@@ -179,3 +305,13 @@ function addRemoveEvents() {
     });
 
 }
+
+// ===========================
+// Checkout Button
+// ===========================
+
+checkoutBtn.addEventListener("click", () => {
+
+    alert("Checkout page coming soon!");
+
+});
