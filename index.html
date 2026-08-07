@@ -34,13 +34,17 @@
 
                 <a href="index.html">Home</a>
                 <a href="shop.html">Shop</a>
-                <a href="login.html">Login</a>
+                <a href="cart.html" class="cart-link">Cart<span class="cart-count" id="cart-count">0</span></a>
 
             </div>
 
             <div class="nav-right">
 
                 <button id="theme-toggle" class="theme-toggle" type="button" aria-label="Toggle dark mode">🌙</button>
+
+                <div class="nav-auth" id="nav-auth">
+                    <a href="login.html" class="btn btn-outline">Login</a>
+                </div>
 
             </div>
 
@@ -145,22 +149,22 @@
 
             <div class="category-strip">
 
-                <a class="category-tile" href="shop.html">
+                <a class="category-tile" href="shop.html?category=Hoodies">
                     <span class="cat-code">01 — Outerwear</span>
                     <span class="cat-name">Hoodies</span>
                 </a>
 
-                <a class="category-tile" href="shop.html">
+                <a class="category-tile" href="shop.html?category=T-Shirts">
                     <span class="cat-code">02 — Basics</span>
                     <span class="cat-name">T-Shirts</span>
                 </a>
 
-                <a class="category-tile" href="shop.html">
+                <a class="category-tile" href="shop.html?category=Sneakers">
                     <span class="cat-code">03 — Footwear</span>
                     <span class="cat-name">Sneakers</span>
                 </a>
 
-                <a class="category-tile" href="shop.html">
+                <a class="category-tile" href="shop.html?category=Accessories">
                     <span class="cat-code">04 — Extras</span>
                     <span class="cat-name">Accessories</span>
                 </a>
@@ -220,6 +224,8 @@
     </footer>
 
     <script type="module" src="js/theme.js"></script>
+
+    <script type="module" src="js/navbar.js"></script>
 
     <script type="module" src="js/landing.js"></script>
 

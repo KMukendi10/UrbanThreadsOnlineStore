@@ -36,7 +36,7 @@
 
                 <a href="index.html">Home</a>
                 <a href="shop.html">Shop</a>
-                <a href="cart.html" class="active">Cart</a>
+                <a href="cart.html" class="cart-link">Cart<span class="cart-count" id="cart-count">0</span></a>
 
             </div>
 
@@ -44,15 +44,9 @@
 
                 <button id="theme-toggle" class="theme-toggle" type="button" aria-label="Toggle dark mode">🌙</button>
 
-                <span id="user-email"></span>
-
-                <button
-                    id="logout-btn"
-                    class="btn btn-primary">
-
-                    Logout
-
-                </button>
+                <div class="nav-auth" id="nav-auth">
+                    <a href="login.html" class="btn btn-outline">Login</a>
+                </div>
 
             </div>
 
@@ -78,25 +72,52 @@
 
         </section>
 
-        <section id="cart-items">
+        <div class="gate" id="cart-gate" hidden>
 
-        </section>
+            <h2>Log in to see your cart</h2>
 
-        <div class="cart-summary">
+            <p>Your cart is tied to your account so it's there whichever device you shop from.</p>
 
-            <h2 id="cart-total">
+            <a href="login.html?next=cart.html" class="btn btn-primary">Log in / Sign up</a>
 
-                Total: R0.00
+        </div>
 
-            </h2>
+        <div class="cart-layout" id="cart-layout" hidden>
 
-            <button
-                id="checkout-btn"
-                class="btn btn-primary">
+            <div class="cart-list" id="cart-list">
 
-                Proceed to Checkout
+                <p class="loading-state">Loading cart…</p>
 
-            </button>
+            </div>
+
+            <div class="cart-summary">
+
+                <h2>Order Summary</h2>
+
+                <div class="summary-row">
+                    <span>Subtotal</span>
+                    <span id="summary-subtotal">R0.00</span>
+                </div>
+
+                <div class="summary-row">
+                    <span>Shipping</span>
+                    <span>Free</span>
+                </div>
+
+                <div class="summary-row total">
+                    <span>Total</span>
+                    <span id="summary-total">R0.00</span>
+                </div>
+
+                <div class="summary-actions">
+
+                    <button type="button" id="checkout-btn" class="btn btn-primary btn-block" disabled>Checkout</button>
+
+                    <a href="shop.html" class="btn btn-outline btn-block">Continue Shopping</a>
+
+                </div>
+
+            </div>
 
         </div>
 
@@ -128,7 +149,11 @@
 
     </footer>
 
+    <div class="toast" id="toast"></div>
+
     <script type="module" src="js/theme.js"></script>
+
+    <script type="module" src="js/navbar.js"></script>
 
     <script type="module" src="js/cart.js"></script>
 

@@ -34,10 +34,7 @@
 
                 <a href="index.html">Home</a>
                 <a href="shop.html">Shop</a>
-                <a href="cart.html">
-                    Cart
-                    <span class="cart-count" id="cart-count">0</span>
-                </a>
+                <a href="cart.html" class="cart-link">Cart<span class="cart-count" id="cart-count">0</span></a>
 
             </div>
 
@@ -45,15 +42,9 @@
 
                 <button id="theme-toggle" class="theme-toggle" type="button" aria-label="Toggle dark mode">🌙</button>
 
-                <span id="user-email"></span>
-
-                <button
-                    id="logout-btn"
-                    class="btn btn-primary">
-
-                    Logout
-
-                </button>
+                <div class="nav-auth" id="nav-auth">
+                    <a href="login.html" class="btn btn-outline">Login</a>
+                </div>
 
             </div>
 
@@ -99,6 +90,7 @@
         <section class="categories">
 
             <button
+                type="button"
                 class="category-btn active"
                 data-category="All">
 
@@ -107,6 +99,7 @@
             </button>
 
             <button
+                type="button"
                 class="category-btn"
                 data-category="Hoodies">
 
@@ -115,6 +108,7 @@
             </button>
 
             <button
+                type="button"
                 class="category-btn"
                 data-category="T-Shirts">
 
@@ -123,6 +117,7 @@
             </button>
 
             <button
+                type="button"
                 class="category-btn"
                 data-category="Sneakers">
 
@@ -131,6 +126,7 @@
             </button>
 
             <button
+                type="button"
                 class="category-btn"
                 data-category="Accessories">
 
@@ -176,7 +172,11 @@
 
     </footer>
 
+    <div class="toast" id="toast"></div>
+
     <script type="module" src="js/theme.js"></script>
+
+    <script type="module" src="js/navbar.js"></script>
 
     <script type="module" src="js/shop.js"></script>
 

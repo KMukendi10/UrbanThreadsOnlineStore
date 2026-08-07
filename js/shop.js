@@ -1,9 +1,12 @@
-import { auth, db } from "./firebase-config.js";
+// shop.js
+//
+// The shop is browsable without an account — products load as soon as
+// the page does, no auth check. The nav bar's Login/Logout state and
+// cart-count badge are handled globally by navbar.js. Auth only comes
+// into play right when a shopper clicks "Add" — if they're not signed
+// in, they're sent to the login page and back here afterwards.
 
-import {
-    onAuthStateChanged,
-    signOut
-} from "https://www.gstatic.com/firebasejs/12.17.1/firebase-auth.js";
+import { auth, db } from "./firebase-config.js";
 
 import {
     collection,
@@ -15,54 +18,46 @@ import {
     doc
 } from "https://www.gstatic.com/firebasejs/12.17.1/firebase-firestore.js";
 
-const userEmail = document.getElementById("user-email");
-const logoutBtn = document.getElementById("logout-btn");
+import {
+    onAuthStateChanged
+} from "https://www.gstatic.com/firebasejs/12.17.1/firebase-auth.js";
+
+import { refreshCartCount } from "./navbar.js";
+import { showToast } from "./toast.js";
+
 const productsContainer = document.getElementById("products");
 const searchInput = document.getElementById("search");
-const cartCount = document.getElementById("cart-count");
 
-let currentUser = null;
 let allProducts = [];
 let selectedCategory = "All";
+let currentUser = null;
 
-// ===========================
-// Authentication
-// ===========================
+onAuthStateChanged(auth, (user) => {
 
-onAuthStateChanged(auth, async (user) => {
-
-    if (user) {
-
-        currentUser = user;
-
-        userEmail.textContent = user.email;
-
-        await loadProducts();
-
-        await loadCartCount();
-
-    } else {
-
-        window.location.href = "login.html";
-
-    }
+    currentUser = user;
 
 });
 
+// A category tile on the home page links here as shop.html?category=Hoodies
+// — pick that category up and pre-select it before the first render.
+const requestedCategory = new URLSearchParams(window.location.search).get("category");
+
+if (requestedCategory) {
+
+    selectedCategory = requestedCategory;
+
+    document.querySelectorAll(".category-btn").forEach((button) => {
+
+        button.classList.toggle("active", button.dataset.category === requestedCategory);
+
+    });
+
+}
+
+loadProducts();
+
 // ===========================
-// Logout
-// ===========================
-
-logoutBtn.addEventListener("click", async () => {
-
-    await signOut(auth);
-
-    window.location.href = "login.html";
-
-});
-
-// ===========================
-// Load Products
+// Load Products (public)
 // ===========================
 
 async function loadProducts() {
@@ -75,12 +70,12 @@ async function loadProducts() {
 
         allProducts = [];
 
-        querySnapshot.forEach((doc) => {
+        querySnapshot.forEach((docSnap) => {
 
             allProducts.push({
 
-                id: doc.id,
-                ...doc.data()
+                id: docSnap.id,
+                ...docSnap.data()
 
             });
 
@@ -143,6 +138,7 @@ function displayProducts(products) {
                         </span>
 
                         <button
+                            type="button"
                             class="add-cart-btn"
                             data-id="${product.id}">
                             Add
@@ -208,29 +204,7 @@ document.querySelectorAll(".category-btn").forEach((button) => {
 });
 
 // ===========================
-// Cart Counter
-// ===========================
-
-async function loadCartCount() {
-
-    const snapshot = await getDocs(
-        collection(db, "users", currentUser.uid, "cart")
-    );
-
-    let totalItems = 0;
-
-    snapshot.forEach((doc) => {
-
-        totalItems += doc.data().quantity;
-
-    });
-
-    cartCount.textContent = totalItems;
-
-}
-
-// ===========================
-// Add To Cart
+// Add To Cart (sign-in required)
 // ===========================
 
 function addCartEvents() {
@@ -240,6 +214,21 @@ function addCartEvents() {
     buttons.forEach((button) => {
 
         button.addEventListener("click", async () => {
+
+            if (!currentUser) {
+
+                showToast("Please log in to add items to your cart");
+
+                setTimeout(() => {
+
+                    const next = "shop.html" + window.location.search;
+                    window.location.href = `login.html?next=${encodeURIComponent(next)}`;
+
+                }, 1400);
+
+                return;
+
+            }
 
             const product = allProducts.find(
                 item => item.id === button.dataset.id
@@ -292,9 +281,9 @@ function addCartEvents() {
 
             }
 
-            await loadCartCount();
+            await refreshCartCount(currentUser.uid);
 
-            alert("Product added to cart!");
+            showToast(`${product.name} added to cart`);
 
         });
 

@@ -36,13 +36,17 @@
 
                 <a href="index.html">Home</a>
                 <a href="shop.html">Shop</a>
-                <a href="login.html">Login</a>
+                <a href="cart.html" class="cart-link">Cart<span class="cart-count" id="cart-count">0</span></a>
 
             </div>
 
             <div class="nav-right">
 
                 <button id="theme-toggle" class="theme-toggle" type="button" aria-label="Toggle dark mode">🌙</button>
+
+                <div class="nav-auth" id="nav-auth">
+                    <a href="login.html" class="btn btn-outline">Login</a>
+                </div>
 
             </div>
 
@@ -78,21 +82,30 @@
 
             </p>
 
-            <!-- Login Form -->
+            <!-- Login / Sign up Tabs -->
 
-            <form id="auth-form">
+            <div class="auth-tabs" role="tablist">
+
+                <button type="button" class="auth-tab" id="tab-login" role="tab" aria-selected="true">Login</button>
+                <button type="button" class="auth-tab" id="tab-signup" role="tab" aria-selected="false">Sign Up</button>
+
+            </div>
+
+            <form id="form-login">
 
                 <input
                     type="email"
-                    id="email"
+                    id="login-email"
                     placeholder="Email Address"
-                    required>
+                    required
+                    autocomplete="email">
 
                 <input
                     type="password"
-                    id="password"
+                    id="login-password"
                     placeholder="Password"
-                    required>
+                    required
+                    autocomplete="current-password">
 
                 <button
                     type="submit"
@@ -104,30 +117,44 @@
 
             </form>
 
+            <form id="form-signup" hidden>
+
+                <input
+                    type="email"
+                    id="signup-email"
+                    placeholder="Email Address"
+                    required
+                    autocomplete="email">
+
+                <input
+                    type="password"
+                    id="signup-password"
+                    placeholder="Password"
+                    required
+                    minlength="6"
+                    autocomplete="new-password">
+
+                <button
+                    type="submit"
+                    class="btn btn-primary">
+
+                    Create Account
+
+                </button>
+
+            </form>
+
             <p id="message"></p>
 
-            <hr>
-
-            <h2>
-
-                New Customer?
-
-            </h2>
-
-            <button
-                type="button"
-                id="signup-btn"
-                class="btn btn-outline">
-
-                Create Account
-
-            </button>
+            <p class="auth-switch">Only logged-in shoppers can access their cart and checkout.</p>
 
         </div>
 
     </section>
 
     <script type="module" src="js/theme.js"></script>
+
+    <script type="module" src="js/navbar.js"></script>
 
     <script type="module" src="js/auth.js"></script>
 

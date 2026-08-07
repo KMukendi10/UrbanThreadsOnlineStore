@@ -1,8 +1,17 @@
+// cart.js
+//
+// If nobody's signed in, shows the #cart-gate panel with a "log in / sign
+// up" prompt instead of bouncing the visitor straight to the login page —
+// same pattern as add-to-cart on the shop page.
+//
+// Quantity +/- and remove update Firestore, then patch only the affected
+// row and the totals in the DOM — the list is never wiped and rebuilt, so
+// there's no flash that looks like the page reloading.
+
 import { auth, db } from "./firebase-config.js";
 
 import {
-    onAuthStateChanged,
-    signOut
+    onAuthStateChanged
 } from "https://www.gstatic.com/firebasejs/12.17.1/firebase-auth.js";
 
 import {
@@ -13,13 +22,21 @@ import {
     updateDoc
 } from "https://www.gstatic.com/firebasejs/12.17.1/firebase-firestore.js";
 
-const userEmail = document.getElementById("user-email");
-const logoutBtn = document.getElementById("logout-btn");
-const cartItems = document.getElementById("cart-items");
-const cartTotal = document.getElementById("cart-total");
+import { refreshCartCount } from "./navbar.js";
+import { showToast } from "./toast.js";
+
+const gate = document.getElementById("cart-gate");
+const layout = document.getElementById("cart-layout");
+const cartList = document.getElementById("cart-list");
+const summarySubtotal = document.getElementById("summary-subtotal");
+const summaryTotal = document.getElementById("summary-total");
 const checkoutBtn = document.getElementById("checkout-btn");
 
 let currentUser = null;
+
+// Local mirror of what's in Firestore, keyed by cart doc id, so quantity
+// changes can recompute totals without a fresh read every time.
+let items = new Map();
 
 // ===========================
 // Authentication
@@ -31,47 +48,49 @@ onAuthStateChanged(auth, (user) => {
 
         currentUser = user;
 
-        userEmail.textContent = user.email;
+        gate.hidden = true;
+        layout.hidden = false;
 
         loadCart();
 
     } else {
 
-        window.location.href = "login.html";
+        currentUser = null;
+
+        gate.hidden = false;
+        layout.hidden = true;
 
     }
 
 });
 
 // ===========================
-// Logout
-// ===========================
-
-logoutBtn.addEventListener("click", async () => {
-
-    await signOut(auth);
-
-    window.location.href = "login.html";
-
-});
-
-// ===========================
-// Load Cart
+// Load Cart (full render — only happens once per visit/login)
 // ===========================
 
 async function loadCart() {
-
-    cartItems.innerHTML = "";
-
-    let total = 0;
 
     const snapshot = await getDocs(
         collection(db, "users", currentUser.uid, "cart")
     );
 
-    if (snapshot.empty) {
+    items = new Map();
 
-        cartItems.innerHTML = `
+    snapshot.forEach((item) => {
+
+        items.set(item.id, item.data());
+
+    });
+
+    renderCart();
+
+}
+
+function renderCart() {
+
+    if (items.size === 0) {
+
+        cartList.innerHTML = `
 
             <div class="empty-state">
 
@@ -83,9 +102,9 @@ async function loadCart() {
 
         `;
 
-        cartTotal.textContent = "Total: R0.00";
-
         checkoutBtn.disabled = true;
+
+        updateTotals();
 
         return;
 
@@ -93,213 +112,159 @@ async function loadCart() {
 
     checkoutBtn.disabled = false;
 
-    snapshot.forEach((item) => {
+    cartList.innerHTML = "";
 
-        const product = item.data();
+    items.forEach((product, id) => {
 
-        const subtotal = product.price * product.quantity;
+        cartList.insertAdjacentHTML("beforeend", cartRowHtml(id, product));
 
-        total += subtotal;
+    });
 
-        cartItems.innerHTML += `
+    addRowEvents();
 
-            <div class="cart-card fade-in">
+    updateTotals();
 
-                <img
-                    src="${product.imageURL}"
-                    alt="${product.name}"
-                    class="cart-image"
-                >
+}
 
-                <div class="cart-details">
+function cartRowHtml(id, product) {
 
-                    <h3>${product.name}</h3>
+    return `
+        <div class="cart-row" data-row="${id}">
 
-                    <p>${product.description}</p>
+            <img src="${product.imageURL}" alt="${product.name}">
 
-                    <p>Category: ${product.category}</p>
-
-                    <div class="cart-price">
-
-                        R${product.price.toFixed(2)}
-
-                    </div>
-
-                    <div class="quantity-controls">
-
-                        <button
-                            class="qty-btn decrease-btn"
-                            data-id="${item.id}"
-                            data-quantity="${product.quantity}">
-                        </button>
-
-                        <span class="quantity">
-
-                            ${product.quantity}
-
-                        </span>
-
-                        <button
-                            class="qty-btn increase-btn"
-                            data-id="${item.id}"
-                            data-quantity="${product.quantity}">
-
-                            +
-
-                        </button>
-
-                    </div>
-
-                    <p>
-
-                        <strong>
-
-                            Subtotal:
-                            R${subtotal.toFixed(2)}
-
-                        </strong>
-
-                    </p>
-
-                    <button
-                        class="remove-btn"
-                        data-id="${item.id}">
-
-                        Remove Item
-
-                    </button>
-
-                </div>
-
+            <div>
+                <div class="cart-item-name">${product.name}</div>
+                <div class="cart-item-meta">${product.category}</div>
+                <div class="cart-item-price">R${product.price.toFixed(2)}</div>
             </div>
 
-        `;
+            <div class="qty-control">
+                <button type="button" class="decrease-btn" data-id="${id}">−</button>
+                <span class="quantity" data-id="${id}">${product.quantity}</span>
+                <button type="button" class="increase-btn" data-id="${id}">+</button>
+            </div>
 
-    });
+            <button type="button" class="remove-link" data-id="${id}">Remove</button>
 
-    cartTotal.textContent = `Total: R${total.toFixed(2)}`;
-
-    addQuantityEvents();
-
-    addRemoveEvents();
+        </div>
+    `;
 
 }
 
 // ===========================
-// Quantity Buttons
+// Quantity + Remove (in-place, no full re-render)
 // ===========================
 
-function addQuantityEvents() {
+function addRowEvents() {
 
-    const increaseButtons = document.querySelectorAll(".increase-btn");
+    cartList.querySelectorAll(".increase-btn").forEach((button) => {
 
-    const decreaseButtons = document.querySelectorAll(".decrease-btn");
-
-    increaseButtons.forEach((button) => {
-
-        button.addEventListener("click", async () => {
-
-            const quantity = Number(button.dataset.quantity);
-
-            await updateDoc(
-
-                doc(
-                    db,
-                    "users",
-                    currentUser.uid,
-                    "cart",
-                    button.dataset.id
-                ),
-
-                {
-                    quantity: quantity + 1
-                }
-
-            );
-
-            loadCart();
-
-        });
+        button.addEventListener("click", () => changeQuantity(button.dataset.id, 1));
 
     });
 
-    decreaseButtons.forEach((button) => {
+    cartList.querySelectorAll(".decrease-btn").forEach((button) => {
 
-        button.addEventListener("click", async () => {
+        button.addEventListener("click", () => changeQuantity(button.dataset.id, -1));
 
-            const quantity = Number(button.dataset.quantity);
+    });
 
-            if (quantity <= 1) {
+    cartList.querySelectorAll(".remove-link").forEach((button) => {
 
-                await deleteDoc(
-
-                    doc(
-                        db,
-                        "users",
-                        currentUser.uid,
-                        "cart",
-                        button.dataset.id
-                    )
-
-                );
-
-            } else {
-
-                await updateDoc(
-
-                    doc(
-                        db,
-                        "users",
-                        currentUser.uid,
-                        "cart",
-                        button.dataset.id
-                    ),
-
-                    {
-                        quantity: quantity - 1
-                    }
-
-                );
-
-            }
-
-            loadCart();
-
-        });
+        button.addEventListener("click", () => removeItem(button.dataset.id));
 
     });
 
 }
 
+async function changeQuantity(id, delta) {
+
+    const product = items.get(id);
+
+    if (!product) {
+
+        return;
+
+    }
+
+    const nextQuantity = product.quantity + delta;
+
+    if (nextQuantity <= 0) {
+
+        await removeItem(id);
+        return;
+
+    }
+
+    await updateDoc(
+        doc(db, "users", currentUser.uid, "cart", id),
+        { quantity: nextQuantity }
+    );
+
+    product.quantity = nextQuantity;
+
+    const qtyEl = cartList.querySelector(`.quantity[data-id="${id}"]`);
+
+    if (qtyEl) {
+
+        qtyEl.textContent = nextQuantity;
+
+    }
+
+    updateTotals();
+    await refreshCartCount(currentUser.uid);
+
+}
+
+async function removeItem(id) {
+
+    await deleteDoc(
+        doc(db, "users", currentUser.uid, "cart", id)
+    );
+
+    items.delete(id);
+
+    const row = cartList.querySelector(`[data-row="${id}"]`);
+
+    if (row) {
+
+        row.remove();
+
+    }
+
+    if (items.size === 0) {
+
+        renderCart();
+
+    } else {
+
+        updateTotals();
+
+    }
+
+    await refreshCartCount(currentUser.uid);
+
+    showToast("Item removed from cart");
+
+}
+
 // ===========================
-// Remove Item
+// Totals
 // ===========================
 
-function addRemoveEvents() {
+function updateTotals() {
 
-    const buttons = document.querySelectorAll(".remove-btn");
+    let total = 0;
 
-    buttons.forEach((button) => {
+    items.forEach((product) => {
 
-        button.addEventListener("click", async () => {
-
-            await deleteDoc(
-
-                doc(
-                    db,
-                    "users",
-                    currentUser.uid,
-                    "cart",
-                    button.dataset.id
-                )
-
-            );
-
-            loadCart();
-
-        });
+        total += product.price * product.quantity;
 
     });
+
+    summarySubtotal.textContent = `R${total.toFixed(2)}`;
+    summaryTotal.textContent = `R${total.toFixed(2)}`;
 
 }
 
@@ -309,6 +274,6 @@ function addRemoveEvents() {
 
 checkoutBtn.addEventListener("click", () => {
 
-    alert("Checkout page coming soon!");
+    showToast("Checkout page coming soon!");
 
 });

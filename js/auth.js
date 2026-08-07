@@ -1,88 +1,122 @@
 // auth.js
+//
+// Login page only. One card, two tabs (Login / Sign Up). Once Firebase
+// confirms a session exists, redirects straight to "next" (or shop.html)
+// so a logged-in user landing here bounces through instead of seeing the
+// form again — this is also how the "sign in only when you add to cart"
+// flow gets back to where the shopper was headed.
 
 import { auth } from "./firebase-config.js";
 
 import {
     createUserWithEmailAndPassword,
-    signInWithEmailAndPassword
+    signInWithEmailAndPassword,
+    onAuthStateChanged
 } from "https://www.gstatic.com/firebasejs/12.17.1/firebase-auth.js";
 
-// ===========================
-// HTML Elements
-// ===========================
-
-const form = document.getElementById("auth-form");
-const emailInput = document.getElementById("email");
-const passwordInput = document.getElementById("password");
-const signupBtn = document.getElementById("signup-btn");
+const tabLogin = document.getElementById("tab-login");
+const tabSignup = document.getElementById("tab-signup");
+const formLogin = document.getElementById("form-login");
+const formSignup = document.getElementById("form-signup");
 const message = document.getElementById("message");
 
+let redirected = false;
+
 // ===========================
-// Login
+// Redirect once signed in
 // ===========================
 
-form.addEventListener("submit", async (event) => {
+onAuthStateChanged(auth, (user) => {
 
-    event.preventDefault();
+    if (user && !redirected) {
 
-    const email = emailInput.value.trim();
-    const password = passwordInput.value;
+        redirected = true;
 
-    try {
-
-        await signInWithEmailAndPassword(
-            auth,
-            email,
-            password
-        );
-
-        message.style.color = "green";
-        message.textContent = "Login successful! Redirecting...";
-
-        setTimeout(() => {
-
-            window.location.href = "../shop.html";
-
-        }, 1000);
-
-    } catch (error) {
-
-        showError(error.code);
+        const params = new URLSearchParams(window.location.search);
+        window.location.href = params.get("next") || "index.html";
 
     }
 
 });
 
 // ===========================
-// Create Account
+// Tabs
 // ===========================
 
-signupBtn.addEventListener("click", async () => {
+tabLogin.addEventListener("click", () => switchTab("login"));
+tabSignup.addEventListener("click", () => switchTab("signup"));
 
-    const email = emailInput.value.trim();
-    const password = passwordInput.value;
+function switchTab(which) {
+
+    const isLogin = which === "login";
+
+    tabLogin.setAttribute("aria-selected", String(isLogin));
+    tabSignup.setAttribute("aria-selected", String(!isLogin));
+
+    formLogin.hidden = !isLogin;
+    formSignup.hidden = isLogin;
+
+    message.textContent = "";
+
+}
+
+// ===========================
+// Login
+// ===========================
+
+formLogin.addEventListener("submit", async (event) => {
+
+    event.preventDefault();
+    message.textContent = "";
+
+    const email = document.getElementById("login-email").value.trim();
+    const password = document.getElementById("login-password").value;
+    const submitBtn = formLogin.querySelector("button[type=submit]");
+
+    submitBtn.disabled = true;
 
     try {
 
-        await createUserWithEmailAndPassword(
-            auth,
-            email,
-            password
-        );
-
-        message.style.color = "green";
-        message.textContent =
-            "Account created successfully! Redirecting...";
-
-        setTimeout(() => {
-
-            window.location.href = "../shop.html";
-
-        }, 1000);
+        await signInWithEmailAndPassword(auth, email, password);
 
     } catch (error) {
 
         showError(error.code);
+
+    } finally {
+
+        submitBtn.disabled = false;
+
+    }
+
+});
+
+// ===========================
+// Sign Up
+// ===========================
+
+formSignup.addEventListener("submit", async (event) => {
+
+    event.preventDefault();
+    message.textContent = "";
+
+    const email = document.getElementById("signup-email").value.trim();
+    const password = document.getElementById("signup-password").value;
+    const submitBtn = formSignup.querySelector("button[type=submit]");
+
+    submitBtn.disabled = true;
+
+    try {
+
+        await createUserWithEmailAndPassword(auth, email, password);
+
+    } catch (error) {
+
+        showError(error.code);
+
+    } finally {
+
+        submitBtn.disabled = false;
 
     }
 
@@ -99,48 +133,39 @@ function showError(errorCode) {
     switch (errorCode) {
 
         case "auth/invalid-email":
-            message.textContent =
-                "Please enter a valid email address.";
+            message.textContent = "Please enter a valid email address.";
             break;
 
         case "auth/missing-email":
-            message.textContent =
-                "Please enter your email address.";
+            message.textContent = "Please enter your email address.";
             break;
 
         case "auth/missing-password":
-            message.textContent =
-                "Please enter your password.";
+            message.textContent = "Please enter your password.";
             break;
 
         case "auth/invalid-credential":
-            message.textContent =
-                "Incorrect email or password.";
+            message.textContent = "Incorrect email or password.";
             break;
 
         case "auth/email-already-in-use":
-            message.textContent =
-                "An account with this email already exists.";
+            message.textContent = "An account with this email already exists.";
             break;
 
         case "auth/weak-password":
-            message.textContent =
-                "Password must be at least 6 characters long.";
+            message.textContent = "Password must be at least 6 characters long.";
             break;
 
         case "auth/network-request-failed":
-            message.textContent =
-                "Network error. Please check your internet connection.";
+            message.textContent = "Network error. Please check your internet connection.";
             break;
 
         case "auth/too-many-requests":
-            message.textContent =
-                "Too many attempts. Please try again later.";
+            message.textContent = "Too many attempts. Please try again later.";
             break;
 
         default:
-            message.textContent =
-                "Something went wrong. Please try again.";
+            message.textContent = "Something went wrong. Please try again.";
 
     }
 

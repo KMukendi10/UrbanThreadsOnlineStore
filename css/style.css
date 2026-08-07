@@ -4,6 +4,14 @@
 
 @import url('https://fonts.googleapis.com/css2?family=Anton&family=Work+Sans:wght@300;400;500;600;700&family=Space+Mono:wght@400;700&display=swap');
 
+/* ==========================================
+   THEME TOKENS
+   Page background, card surfaces, and text colors are driven by these
+   variables so dark mode is a single [data-theme="dark"] override below.
+   The black nav bar, footer, and brand-blue/red accents are intentionally
+   left as fixed literals — they're meant to stay the same in both themes.
+========================================== */
+
 :root {
     --bg: #f4f4f2;
     --surface: #ffffff;
@@ -209,7 +217,15 @@ nav .nav-container{
 
 }
 
-#user-email{
+.nav-auth{
+
+    display:flex;
+    align-items:center;
+    gap:12px;
+
+}
+
+.user-email{
 
     color:#ddd;
 
@@ -227,13 +243,30 @@ nav .nav-container{
 
 }
 
+/* Cart link needs its own stacking context so the badge can float at its
+   top-right corner without pushing the other nav links out of line. */
+.cart-link{
+
+    padding-right:6px;
+
+}
+
 .cart-count{
 
-    width:22px;
+    position:absolute;
 
-    height:22px;
+    top:-9px;
+
+    right:-2px;
+
+    min-width:16px;
+
+    height:16px;
+    padding:0 3px;
 
     border-radius:50%;
+
+    border:2px solid #111;
 
     display:flex;
 
@@ -245,9 +278,19 @@ nav .nav-container{
 
     color:white;
 
-    font-size:12px;
+    font-size:10px;
 
     font-weight:bold;
+    font-family:'Space Mono',monospace;
+    line-height:1;
+
+}
+
+/* Dark mode keeps the nav bar black regardless of theme, but the badge's
+   border needs to match so it still reads as "cut into" the nav. */
+[data-theme="dark"] .cart-count{
+
+    border-color:#111;
 
 }
 
@@ -745,172 +788,168 @@ nav .nav-container{
 }
 
 /* ==========================================
-   CART
-========================================== */
-
-.cart-card {
-    display: flex;
-    gap: 20px;
-    align-items: center;
-    background:var(--surface);
-    border: 2px solid var(--ink);
-    padding: 20px;
-    margin-bottom: 25px;
-    transition: 0.3s;
-}
-
-.cart-card:hover {
-    box-shadow:8px 8px 0 var(--ink);
-}
-
-.cart-image {
-    width: 160px;
-    height: 160px;
-    object-fit: cover;
-    border: 2px solid var(--ink);
-}
-
-.cart-details {
-    flex: 1;
-}
-
-.cart-details h3 {
-    font-family: "Anton", sans-serif;
-    font-size: 28px;
-    text-transform: uppercase;
-    margin-bottom: 10px;
-}
-
-.cart-details p {
-    color:var(--ink-soft);
-    margin-bottom: 8px;
-}
-
-.cart-price {
-    font-family: "Space Mono", monospace;
-    font-size: 22px;
-    font-weight: bold;
-    color: #2563eb;
-    margin: 12px 0;
-}
-
-.quantity-controls {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    margin-top: 15px;
-}
-
-.quantity-controls button {
-    width: 40px;
-    height: 40px;
-    background: #111;
-    color: white;
-    font-size: 18px;
-    transition: 0.3s;
-}
-
-.quantity-controls button:hover {
-    background: #2563eb;
-}
-
-.quantity-controls span {
-    font-size: 18px;
-    font-weight: bold;
-}
-
-.remove-btn {
-    margin-top: 18px;
-    padding: 12px 20px;
-    background: #dc2626;
-    color: white;
-    transition: 0.3s;
-}
-
-.remove-btn:hover {
-    background: #b91c1c;
-}
-
-#cart-total {
-    margin-top: 35px;
-    text-align: right;
-    font-family: "Anton", sans-serif;
-    font-size: 38px;
-    color:var(--ink);
-}
-
-/* ==========================================
    CART PAGE
 ========================================== */
 
-#cart-items {
+.gate {
+    margin-top: 40px;
+    padding: 80px 24px;
+    text-align: center;
+    background: var(--surface);
+    border: 2px dashed var(--ink-soft);
+}
+
+.gate h2 {
+    font-family: "Anton", sans-serif;
+    font-size: 32px;
+    text-transform: uppercase;
+    margin-bottom: 14px;
+}
+
+.gate p {
+    color: var(--ink-soft);
+    max-width: 480px;
+    margin: 0 auto 28px;
+}
+
+.cart-layout {
+    display: grid;
+    grid-template-columns: 1.6fr 1fr;
+    gap: 30px;
     margin-top: 30px;
+    align-items: start;
 }
 
-.cart-card {
-    display: flex;
-    gap: 25px;
-    align-items: center;
-    background:var(--surface);
+.cart-list {
+    background: var(--surface);
     border: 2px solid var(--ink);
-    padding: 20px;
-    margin-bottom: 25px;
-    transition: 0.3s;
 }
 
-.cart-card:hover {
-    transform: translateY(-4px);
-    box-shadow:8px 8px 0 var(--ink);
+.cart-list .loading-state,
+.cart-list .empty-state {
+    border: none;
+    margin: 0;
 }
 
-.cart-image {
-    width: 170px;
-    height: 170px;
+.cart-row {
+    display: grid;
+    grid-template-columns: 90px 1fr auto auto;
+    gap: 18px;
+    align-items: center;
+    padding: 18px;
+}
+
+.cart-row + .cart-row {
+    border-top: 2px solid var(--bg);
+}
+
+.cart-row img {
+    width: 90px;
+    height: 90px;
     object-fit: cover;
     border: 2px solid var(--ink);
 }
 
-.cart-details {
-    flex: 1;
-}
-
-.cart-details h3 {
+.cart-item-name {
     font-family: "Anton", sans-serif;
-    font-size: 30px;
-    margin-bottom: 10px;
+    font-size: 17px;
     text-transform: uppercase;
 }
 
-.cart-details p {
-    margin-bottom: 8px;
-    color:var(--ink-soft);
+.cart-item-meta {
+    font-family: "Space Mono", monospace;
+    font-size: 12px;
+    color: var(--ink-soft);
+    margin-top: 4px;
 }
 
-.cart-price {
+.cart-item-price {
+    font-family: "Space Mono", monospace;
+    font-size: 14px;
     color: #2563eb;
-    font-size: 22px;
     font-weight: bold;
-    margin: 15px 0;
+    margin-top: 6px;
 }
 
-.remove-btn {
-    background: #dc2626;
+.qty-control {
+    display: flex;
+    align-items: center;
+    border: 2px solid var(--ink);
+    font-family: "Space Mono", monospace;
+}
+
+.qty-control button {
+    width: 30px;
+    height: 30px;
+    background: var(--surface);
+    color: var(--ink);
+    font-size: 15px;
+}
+
+.qty-control button:hover {
+    background: #2563eb;
     color: white;
-    padding: 12px 20px;
-    border: none;
-    cursor: pointer;
-    transition: 0.3s;
 }
 
-.remove-btn:hover {
-    background: #b91c1c;
+.qty-control span {
+    min-width: 30px;
+    text-align: center;
+    font-size: 13px;
 }
 
-#cart-total {
-    text-align: right;
-    margin-top: 35px;
-    font-size: 40px;
+.remove-link {
+    font-family: "Space Mono", monospace;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: #dc2626;
+    border-bottom: 1px solid #dc2626;
+    background: none;
+    padding: 0;
+}
+
+.cart-summary {
+    border: 2px solid var(--ink);
+    background: var(--surface);
+    padding: 26px;
+    position: sticky;
+    top: 96px;
+}
+
+.cart-summary h2 {
     font-family: "Anton", sans-serif;
+    font-size: 24px;
+    text-transform: uppercase;
+    margin-bottom: 20px;
+}
+
+.summary-row {
+    display: flex;
+    justify-content: space-between;
+    font-family: "Space Mono", monospace;
+    font-size: 13px;
+    padding: 12px 0;
+    border-bottom: 1px solid var(--bg);
+}
+
+.summary-row.total {
+    font-size: 17px;
+    font-weight: bold;
+    border-bottom: none;
+    border-top: 2px solid var(--ink);
+    margin-top: 6px;
+    padding-top: 16px;
+}
+
+.summary-actions {
+    margin-top: 22px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.btn-block {
+    width: 100%;
 }
 
 /* ==========================================
@@ -981,10 +1020,16 @@ footer p {
     gap: 18px;
 }
 
+.login-container form[hidden] {
+    display: none;
+}
+
 .login-container input {
     padding: 15px;
     border: 2px solid var(--ink);
     font-size: 16px;
+    background: var(--surface);
+    color: var(--ink);
 }
 
 .login-container input:focus {
@@ -992,20 +1037,45 @@ footer p {
     border-color: #2563eb;
 }
 
-#login-message {
+/* Login / Sign Up tab switcher, sits above whichever form is active */
+.auth-tabs {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    border: 2px solid var(--ink);
+    margin-bottom: 28px;
+}
+
+.auth-tab {
+    background: var(--surface);
+    color: var(--ink);
+    padding: 14px;
+    font-family: "Space Mono", monospace;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.auth-tab + .auth-tab {
+    border-left: 2px solid var(--ink);
+}
+
+.auth-tab[aria-selected="true"] {
+    background: #2563eb;
+    color: white;
+}
+
+#message {
     margin-top: 15px;
     color: #dc2626;
     font-weight: bold;
+    min-height: 20px;
 }
 
-.login-container hr {
-    margin: 35px 0;
-}
-
-.login-container h2 {
-    font-family: "Anton", sans-serif;
-    font-size: 30px;
-    margin-bottom: 15px;
+.auth-switch {
+    margin-top: 24px;
+    font-size: 13px;
+    color: var(--ink-soft);
+    text-align: center;
 }
 
 @media (max-width: 900px) {
@@ -1025,11 +1095,39 @@ footer p {
 }
 
 /* ==========================================
+   TOAST
+========================================== */
+
+.toast {
+    position: fixed;
+    bottom: 28px;
+    left: 50%;
+    transform: translateX(-50%) translateY(20px);
+    background: #111;
+    color: white;
+    font-family: "Space Mono", monospace;
+    font-size: 13px;
+    padding: 16px 26px;
+    border: 2px solid var(--ink);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.25s ease, transform 0.25s ease;
+    z-index: 2000;
+    max-width: 90vw;
+    text-align: center;
+}
+
+.toast.show {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+}
+
+/* ==========================================
    SIMPLE ANIMATIONS
 ========================================== */
 
 .product-card,
-.cart-card,
+.cart-row,
 .category-btn,
 .add-cart-btn,
 .btn {
@@ -1095,14 +1193,28 @@ footer p {
         justify-content: center;
     }
 
-    .cart-card {
-        flex-direction: column;
-        text-align: center;
+    .cart-layout {
+        grid-template-columns: 1fr;
     }
 
-    .cart-image {
-        width: 100%;
-        height: 260px;
+    .cart-summary {
+        position: static;
+    }
+
+    .cart-row {
+        grid-template-columns: 64px 1fr;
+        row-gap: 10px;
+    }
+
+    .cart-row img {
+        width: 64px;
+        height: 64px;
+    }
+
+    .qty-control,
+    .remove-link {
+        grid-column: 2;
+        justify-self: start;
     }
 
     #products {
@@ -1129,10 +1241,6 @@ footer p {
         grid-template-columns: 1fr;
     }
 
-}
-
-@media (max-width: 480px) {
-
     main {
         width: 95%;
     }
@@ -1155,10 +1263,6 @@ footer p {
 
     .product-card img {
         height: 260px;
-    }
-
-    .cart-image {
-        height: 220px;
     }
 
 }
