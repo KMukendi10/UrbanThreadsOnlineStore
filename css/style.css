@@ -4,14 +4,6 @@
 
 @import url('https://fonts.googleapis.com/css2?family=Anton&family=Work+Sans:wght@300;400;500;600;700&family=Space+Mono:wght@400;700&display=swap');
 
-/* ==========================================
-   THEME TOKENS
-   Page background, card surfaces, and text colors are driven by these
-   variables so dark mode is a single [data-theme="dark"] override below.
-   The black nav bar, footer, and brand-blue/red accents are intentionally
-   left as fixed literals — they're meant to stay the same in both themes.
-========================================== */
-
 :root {
     --bg: #f4f4f2;
     --surface: #ffffff;
