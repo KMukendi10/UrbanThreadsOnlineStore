@@ -2,13 +2,7 @@
 <html lang="en">
 <head>
 
-    <script>
-        (function () {
-            var stored = localStorage.getItem("ut-theme");
-            var theme = stored || (window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
-            document.documentElement.setAttribute("data-theme", theme);
-        })();
-    </script>
+    <script src="js/theme-init.js"></script>
 
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -134,60 +128,68 @@
     </section>
 
     <!-- ==========================
-         Featured Section
+         Shop by Category
     =========================== -->
 
     <main id="featured">
 
-        <h1>
+        <section class="section">
 
-            Featured Categories
+            <div class="section-head">
 
-        </h1>
+                <h2>Shop by Category</h2>
 
-        <div class="categories">
+                <a href="shop.html" class="btn btn-outline">View all</a>
 
-            <button class="category-btn">
+            </div>
 
-                Hoodies
+            <div class="category-strip">
 
-            </button>
+                <a class="category-tile" href="shop.html">
+                    <span class="cat-code">01 — Outerwear</span>
+                    <span class="cat-name">Hoodies</span>
+                </a>
 
-            <button class="category-btn">
+                <a class="category-tile" href="shop.html">
+                    <span class="cat-code">02 — Basics</span>
+                    <span class="cat-name">T-Shirts</span>
+                </a>
 
-                T-Shirts
+                <a class="category-tile" href="shop.html">
+                    <span class="cat-code">03 — Footwear</span>
+                    <span class="cat-name">Sneakers</span>
+                </a>
 
-            </button>
+                <a class="category-tile" href="shop.html">
+                    <span class="cat-code">04 — Extras</span>
+                    <span class="cat-name">Accessories</span>
+                </a>
 
-            <button class="category-btn">
+            </div>
 
-                Sneakers
+        </section>
 
-            </button>
+        <!-- ==========================
+             Fresh Drops (live from Firestore)
+        =========================== -->
 
-            <button class="category-btn">
+        <section class="section">
 
-                Accessories
+            <div class="section-head">
 
-            </button>
+                <h2>Fresh Drops</h2>
 
-        </div>
+                <a href="shop.html" class="btn btn-outline">Shop all</a>
 
-        <p style="font-size:18px; max-width:700px; line-height:1.8; color:#555;">
+            </div>
 
-            Urban Threads is your destination for modern streetwear.
-            Every collection is carefully selected to combine style,
-            comfort and quality for everyday wear.
+            <div class="product-grid" id="featured-grid">
 
-        </p>
+                <p class="loading-state">Loading products…</p>
 
-        <br><br>
+            </div>
 
-        <a href="shop.html" class="btn btn-primary">
-
-            Start Shopping
-
-        </a>
+        </section>
 
     </main>
 
@@ -218,6 +220,8 @@
     </footer>
 
     <script type="module" src="js/theme.js"></script>
+
+    <script type="module" src="js/landing.js"></script>
 
 </body>
 </html>

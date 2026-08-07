@@ -661,6 +661,82 @@ nav .nav-container{
 }
 
 /* ==========================================
+   HOME PAGE SECTIONS
+   Section header + category tiles + the Fresh Drops product grid.
+   Reuses the same tokens/accent as the rest of the site so it reads as
+   part of the same design, not a bolted-on block.
+========================================== */
+
+.section {
+    padding: 70px 0;
+}
+
+.section-head {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 16px;
+    margin-bottom: 36px;
+    padding-bottom: 18px;
+    border-bottom: 2px solid var(--ink);
+}
+
+.section-head h2 {
+    font-family: "Anton", sans-serif;
+    font-size: clamp(30px, 4vw, 44px);
+    text-transform: uppercase;
+}
+
+.category-strip {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 2px;
+    background: var(--ink);
+    border: 2px solid var(--ink);
+}
+
+.category-tile {
+    background: var(--surface);
+    color: var(--ink);
+    padding: 30px 20px;
+    min-height: 150px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    transition: 0.3s;
+}
+
+.category-tile:hover {
+    background: #2563eb;
+    color: white;
+}
+
+.category-tile .cat-name {
+    font-family: "Anton", sans-serif;
+    font-size: 24px;
+    text-transform: uppercase;
+}
+
+.category-tile .cat-code {
+    font-family: "Space Mono", monospace;
+    font-size: 12px;
+    color: var(--ink-soft);
+}
+
+.category-tile:hover .cat-code {
+    color: white;
+    opacity: 0.8;
+}
+
+/* Same grid rules as #products, exposed as a class so the home page's
+   Fresh Drops grid (#featured-grid) can share it without duplicate ids. */
+.product-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(270px, 1fr));
+    gap: 30px;
+}
+
+/* ==========================================
    LOADING & EMPTY STATES
 ========================================== */
 
@@ -1041,8 +1117,24 @@ footer p {
         grid-template-columns: 1fr;
     }
 
+    .product-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .category-strip {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
     .hero-text h1 {
         font-size: 58px;
+    }
+
+}
+
+@media (max-width: 480px) {
+
+    .category-strip {
+        grid-template-columns: 1fr;
     }
 
 }
