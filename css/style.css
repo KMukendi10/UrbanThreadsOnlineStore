@@ -1,16 +1,7 @@
 /* ==========================================
    GOOGLE FONTS
 ========================================== */
-
 @import url('https://fonts.googleapis.com/css2?family=Anton&family=Work+Sans:wght@300;400;500;600;700&family=Space+Mono:wght@400;700&display=swap');
-
-/* ==========================================
-   THEME TOKENS
-   Page background, card surfaces, and text colors are driven by these
-   variables so dark mode is a single [data-theme="dark"] override below.
-   The black nav bar, footer, and brand-blue/red accents are intentionally
-   left as fixed literals — they're meant to stay the same in both themes.
-========================================== */
 
 :root {
     --bg: #f4f4f2;
@@ -31,7 +22,6 @@
 /* ==========================================
    RESET
 ========================================== */
-
 *{
     margin:0;
     padding:0;
@@ -43,161 +33,110 @@ html{
 }
 
 body{
-
     font-family:'Work Sans',sans-serif;
     background:var(--bg);
     color:var(--ink);
     line-height:1.6;
     -webkit-font-smoothing:antialiased;
-
 }
 
 img{
-
     display:block;
     width:100%;
-
 }
 
 a{
-
     text-decoration:none;
     color:inherit;
-
 }
 
 button{
-
     cursor:pointer;
     border:none;
     font-family:'Work Sans',sans-serif;
-
 }
 
 main{
-
     width:92%;
     max-width:1300px;
     margin:50px auto;
-
 }
 
 /* ==========================================
    NAVBAR
 ========================================== */
-
 nav{
-
     position:sticky;
     top:0;
     z-index:1000;
-
     background:#111;
-
     border-bottom:2px solid var(--ink);
-
 }
 
 nav .nav-container{
-
     max-width:1300px;
-
     margin:auto;
-
     height:75px;
-
     display:flex;
     justify-content:space-between;
     align-items:center;
-
     padding:0 25px;
-
 }
 
 .logo{
-
     display:flex;
     align-items:center;
     gap:12px;
-
     font-family:'Anton',sans-serif;
     font-size:30px;
     letter-spacing:1px;
-
     color:white;
-
 }
 
 .logo-circle{
-
     width:14px;
     height:14px;
-
     border-radius:50%;
-
     background:#2563eb;
-
 }
 
 .nav-links{
-
     display:flex;
     align-items:center;
     gap:30px;
-
 }
 
 .nav-links a{
-
     color:white;
-
     font-family:'Space Mono',monospace;
-
     font-size:13px;
-
     text-transform:uppercase;
-
     position:relative;
-
     transition:.3s;
-
 }
 
 .nav-links a::after{
-
     content:"";
-
     position:absolute;
-
     left:0;
     bottom:-6px;
-
     width:0;
-
     height:2px;
-
     background:#2563eb;
-
     transition:.3s;
-
 }
 
 .nav-links a:hover::after{
-
     width:100%;
-
 }
 
 .nav-right{
-
     display:flex;
     align-items:center;
     gap:15px;
-
 }
 
 .theme-toggle{
-
     display:flex;
     align-items:center;
     justify-content:center;
@@ -205,317 +144,198 @@ nav .nav-container{
     height:36px;
     background:transparent;
     border:2px solid #333;
-    border-radius:4px;
+    border-radius:15px;
     color:#ddd;
     font-size:15px;
-
 }
 
 .theme-toggle:hover{
-
     border-color:#ddd;
-
 }
 
 .nav-auth{
-
     display:flex;
     align-items:center;
     gap:12px;
-
 }
 
 .user-email{
-
     color:#ddd;
-
     font-size:13px;
-
     max-width:180px;
-
     overflow:hidden;
-
     white-space:nowrap;
-
     text-overflow:ellipsis;
-
     font-family:'Space Mono',monospace;
-
 }
 
 /* Cart link needs its own stacking context so the badge can float at its
    top-right corner without pushing the other nav links out of line. */
 .cart-link{
-
     padding-right:6px;
-
 }
 
 .cart-count{
-
     position:absolute;
-
     top:-9px;
-
     right:-2px;
-
     min-width:16px;
-
     height:16px;
     padding:0 3px;
-
     border-radius:50%;
-
     border:2px solid #111;
-
     display:flex;
-
     justify-content:center;
-
     align-items:center;
-
     background:#2563eb;
-
     color:white;
-
     font-size:10px;
-
     font-weight:bold;
     font-family:'Space Mono',monospace;
     line-height:1;
-
 }
 
 /* Dark mode keeps the nav bar black regardless of theme, but the badge's
    border needs to match so it still reads as "cut into" the nav. */
 [data-theme="dark"] .cart-count{
-
     border-color:#111;
-
 }
 
 /* ==========================================
    BUTTONS
 ========================================== */
-
 .btn{
-
     display:inline-flex;
-
     justify-content:center;
-
     align-items:center;
-
     padding:14px 28px;
-
     border:2px solid var(--ink);
-
+    border-radius:20px;
     background:#111;
-
     color:white;
-
     font-family:'Space Mono',monospace;
-
     text-transform:uppercase;
-
     font-size:12px;
-
     letter-spacing:1px;
-
     transition:.25s;
-
 }
 
 .btn:hover{
-
     transform:translate(-3px,-3px);
-
 }
 
 .btn-primary{
-
     background:#2563eb;
-
     border-color:#2563eb;
-
 }
 
 .btn-primary:hover{
-
     background:#1d4ed8;
-
 }
 
 .btn-outline{
-
     background:var(--surface);
-
     color:var(--ink);
-
 }
 
 .btn-outline:hover{
-
     background:#111;
-
     color:white;
-
 }
 
 /* ==========================================
    HERO
 ========================================== */
-
 .hero{
-
     min-height:92vh;
-
     display:grid;
-
     grid-template-columns:1fr 1fr;
-
     align-items:center;
-
     gap:60px;
-
     max-width:1300px;
-
     margin:auto;
-
     padding:70px 30px;
-
 }
 
 .hero-text h1{
-
     font-family:'Anton',sans-serif;
-
     font-size:clamp(60px,8vw,105px);
-
     line-height:0.95;
-
     text-transform:uppercase;
-
 }
 
 .hero-text span{
-
     color:#2563eb;
-
 }
 
 .hero-text p{
-
     margin:30px 0;
-
     font-size:18px;
-
     max-width:550px;
-
     color:var(--ink-soft);
-
 }
 
 .hero-buttons{
-
     display:flex;
-
     gap:20px;
-
     flex-wrap:wrap;
-
 }
 
 .hero-image{
-
     overflow:hidden;
-
     border:3px solid var(--ink);
-
+    border-radius: 25px;
     background:var(--surface);
-
 }
 
 .hero-image img{
-
     aspect-ratio:4/5;
-
     object-fit:cover;
-
     transition:.4s;
-
 }
 
 .hero-image:hover img{
-
     transform:scale(1.05);
-
 }
 
 /* ==========================================
    ANNOUNCEMENT BAR
 ========================================== */
-
 .announcement{
-
     background:#111;
-
     color:white;
-
     overflow:hidden;
-
     white-space:nowrap;
-
     padding:12px 0;
-
     border-top:2px solid var(--ink);
-
     border-bottom:2px solid var(--ink);
-
 }
 
 .announcement-track{
-
     display:inline-block;
-
-    animation:scroll 22s linear infinite;
-
+    animation:scroll 10s linear infinite;
     font-family:'Space Mono',monospace;
-
     text-transform:uppercase;
-
     font-size:13px;
-
     letter-spacing:2px;
-
 }
 
 .announcement-track span{
-
     margin:0 40px;
-
 }
 
 @keyframes scroll{
-
     from{
-
         transform:translateX(0);
-
     }
-
     to{
-
         transform:translateX(-50%);
-
     }
-
 }
 
 /* ==========================================
    SHOP HEADER
 ========================================== */
-
 .shop-header {
     margin-bottom: 40px;
 }
@@ -537,7 +357,6 @@ nav .nav-container{
 /* ==========================================
    SEARCH
 ========================================== */
-
 .search-section {
     margin-bottom: 30px;
 }
@@ -546,6 +365,7 @@ nav .nav-container{
     width: 100%;
     padding: 16px 20px;
     border: 2px solid var(--ink);
+    border-radius: 20px;
     background:var(--surface);
     font-size: 16px;
     font-family: "Work Sans", sans-serif;
@@ -560,7 +380,6 @@ nav .nav-container{
 /* ==========================================
    CATEGORY BUTTONS
 ========================================== */
-
 .categories {
     display: flex;
     flex-wrap: wrap;
@@ -571,6 +390,7 @@ nav .nav-container{
 .category-btn {
     padding: 12px 22px;
     border: 2px solid var(--ink);
+    border-radius: 20px;
     background:var(--surface);
     color:var(--ink);
     font-family: "Space Mono", monospace;
@@ -594,7 +414,6 @@ nav .nav-container{
 /* ==========================================
    PRODUCT GRID
 ========================================== */
-
 #products {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(270px, 1fr));
@@ -605,10 +424,10 @@ nav .nav-container{
 /* ==========================================
    PRODUCT CARD
 ========================================== */
-
 .product-card {
     background:var(--surface);
     border: 2px solid var(--ink);
+    border-radius: 25px;
     transition: 0.3s;
     overflow: hidden;
     display: flex;
@@ -684,6 +503,7 @@ nav .nav-container{
     padding: 12px 18px;
     border: none;
     background: #111;
+    border-radius: 20px;
     color: white;
     font-family: "Space Mono", monospace;
     font-size: 12px;
@@ -726,12 +546,12 @@ nav .nav-container{
     display: grid;
     grid-template-columns: repeat(4, 1fr);
     gap: 2px;
-    background: var(--ink);
-    border: 2px solid var(--ink);
 }
 
 .category-tile {
     background: var(--surface);
+    border: 1px solid var(--ink);
+    border-radius: 25px;
     color: var(--ink);
     padding: 30px 20px;
     min-height: 150px;
@@ -774,12 +594,12 @@ nav .nav-container{
 /* ==========================================
    LOADING & EMPTY STATES
 ========================================== */
-
 .loading-state,
 .empty-state {
     grid-column: 1 / -1;
     background:var(--surface);
     border: 2px dashed #999;
+    border-radius: 25px;
     padding: 60px 20px;
     text-align: center;
     font-family: "Space Mono", monospace;
@@ -790,13 +610,13 @@ nav .nav-container{
 /* ==========================================
    CART PAGE
 ========================================== */
-
 .gate {
     margin-top: 40px;
     padding: 80px 24px;
     text-align: center;
     background: var(--surface);
     border: 2px dashed var(--ink-soft);
+    border-radius: 25px;
 }
 
 .gate h2 {
@@ -823,6 +643,7 @@ nav .nav-container{
 .cart-list {
     background: var(--surface);
     border: 2px solid var(--ink);
+    border-radius: 25px;
 }
 
 .cart-list .loading-state,
@@ -848,6 +669,7 @@ nav .nav-container{
     height: 90px;
     object-fit: cover;
     border: 2px solid var(--ink);
+    border-radius: 25px;
 }
 
 .cart-item-name {
@@ -910,6 +732,7 @@ nav .nav-container{
 
 .cart-summary {
     border: 2px solid var(--ink);
+    border-radius: 25px;
     background: var(--surface);
     padding: 26px;
     position: sticky;
@@ -955,7 +778,6 @@ nav .nav-container{
 /* ==========================================
    FOOTER
 ========================================== */
-
 footer {
     margin-top: 80px;
     background: #111;
@@ -981,7 +803,6 @@ footer p {
 /* ==========================================
    LOGIN PAGE
 ========================================== */
-
 .login-page {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -1000,6 +821,7 @@ footer p {
     justify-content: center;
     padding: 60px;
     background:var(--surface);
+    border-radius: 25px;
 }
 
 .login-container h1 {
@@ -1027,6 +849,7 @@ footer p {
 .login-container input {
     padding: 15px;
     border: 2px solid var(--ink);
+    border-radius: 20px;
     font-size: 16px;
     background: var(--surface);
     color: var(--ink);
