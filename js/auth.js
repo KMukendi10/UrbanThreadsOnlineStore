@@ -25,109 +25,71 @@ let redirected = false;
 // ===========================
 // Redirect once signed in
 // ===========================
-
 onAuthStateChanged(auth, (user) => {
-
     if (user && !redirected) {
-
         redirected = true;
-
         const params = new URLSearchParams(window.location.search);
         window.location.href = params.get("next") || "index.html";
-
     }
-
 });
 
 // ===========================
 // Tabs
 // ===========================
-
 tabLogin.addEventListener("click", () => switchTab("login"));
 tabSignup.addEventListener("click", () => switchTab("signup"));
 
 function switchTab(which) {
-
     const isLogin = which === "login";
-
     tabLogin.setAttribute("aria-selected", String(isLogin));
     tabSignup.setAttribute("aria-selected", String(!isLogin));
-
     formLogin.hidden = !isLogin;
     formSignup.hidden = isLogin;
-
     message.textContent = "";
-
 }
 
 // ===========================
 // Login
 // ===========================
-
 formLogin.addEventListener("submit", async (event) => {
-
     event.preventDefault();
     message.textContent = "";
-
     const email = document.getElementById("login-email").value.trim();
     const password = document.getElementById("login-password").value;
     const submitBtn = formLogin.querySelector("button[type=submit]");
-
     submitBtn.disabled = true;
-
     try {
-
         await signInWithEmailAndPassword(auth, email, password);
-
     } catch (error) {
-
         showError(error.code);
-
     } finally {
-
         submitBtn.disabled = false;
-
     }
-
 });
 
 // ===========================
 // Sign Up
 // ===========================
-
 formSignup.addEventListener("submit", async (event) => {
-
     event.preventDefault();
     message.textContent = "";
-
     const email = document.getElementById("signup-email").value.trim();
     const password = document.getElementById("signup-password").value;
     const submitBtn = formSignup.querySelector("button[type=submit]");
-
     submitBtn.disabled = true;
-
     try {
-
         await createUserWithEmailAndPassword(auth, email, password);
-
     } catch (error) {
-
         showError(error.code);
-
     } finally {
-
         submitBtn.disabled = false;
-
     }
-
 });
 
 // ===========================
 // Friendly Error Messages
 // ===========================
-
 function showError(errorCode) {
-
     message.style.color = "#dc2626";
 
     switch (errorCode) {
@@ -166,7 +128,5 @@ function showError(errorCode) {
 
         default:
             message.textContent = "Something went wrong. Please try again.";
-
     }
-
 }
