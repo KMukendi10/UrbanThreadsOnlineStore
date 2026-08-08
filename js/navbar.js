@@ -1,7 +1,8 @@
-// Shared across every page (Home, Shop, Cart, Login) so the nav bar is
-// always identical: Home / Shop / Cart links, theme toggle, and — driven
-// by auth state — either a "Login" link or the signed-in user's email
-// with a Logout button. Also keeps the blue cart-count badge live.
+// Shared across every page (Home, Shop, Cart, Login, Profile) so the nav
+// bar is always identical: Home / Shop / Cart links, theme toggle, and —
+// driven by auth state — either a "Login" link, or (once signed in) a
+// round avatar button that opens a Profile / Logout dropdown. Also keeps
+// the blue cart-count badge live.
 // Browsing (Shop) never requires login; only actions like adding to the
 // cart do, which is handled where that action happens, not here.
 
@@ -22,15 +23,20 @@ const cartCountEl = document.getElementById("cart-count");
 
 onAuthStateChanged(auth, async (user) => {
     if (user) {
+        const initial = (user.email || "?").charAt(0).toUpperCase();
+
         navAuth.innerHTML = `
-            <span class="user-email">${escapeHtml(user.email)}</span>
-            <button type="button" class="btn btn-outline" id="nav-logout-btn">Logout</button>
+            <div class="profile-menu" id="profile-menu">
+                <button type="button" class="avatar-btn" id="avatar-btn" aria-haspopup="true" aria-expanded="false">${escapeHtml(initial)}</button>
+                <div class="profile-dropdown" id="profile-dropdown" hidden>
+                    <div class="profile-dropdown-email">${escapeHtml(user.email)}</div>
+                    <a href="profile.html" class="profile-dropdown-item">Profile</a>
+                    <button type="button" class="profile-dropdown-item" id="nav-logout-btn">Logout</button>
+                </div>
+            </div>
         `;
 
-        document.getElementById("nav-logout-btn").addEventListener("click", async () => {
-            await signOut(auth);
-            window.location.href = "index.html";
-        });
+        wireProfileMenu();
 
         await refreshCartCount(user.uid);
     } else {
@@ -41,6 +47,40 @@ onAuthStateChanged(auth, async (user) => {
         }
     }
 });
+
+// Toggle the avatar dropdown, close it on outside click / Escape, wire Logout.
+function wireProfileMenu() {
+    const menu = document.getElementById("profile-menu");
+    const avatarBtn = document.getElementById("avatar-btn");
+    const dropdown = document.getElementById("profile-dropdown");
+    const logoutBtn = document.getElementById("nav-logout-btn");
+
+    avatarBtn.addEventListener("click", (event) => {
+        event.stopPropagation();
+        const isOpen = !dropdown.hidden;
+        dropdown.hidden = isOpen;
+        avatarBtn.setAttribute("aria-expanded", String(!isOpen));
+    });
+
+    document.addEventListener("click", (event) => {
+        if (!menu.contains(event.target)) {
+            dropdown.hidden = true;
+            avatarBtn.setAttribute("aria-expanded", "false");
+        }
+    });
+
+    document.addEventListener("keydown", (event) => {
+        if (event.key === "Escape") {
+            dropdown.hidden = true;
+            avatarBtn.setAttribute("aria-expanded", "false");
+        }
+    });
+
+    logoutBtn.addEventListener("click", async () => {
+        await signOut(auth);
+        window.location.href = "index.html";
+    });
+}
 
 // Builds a login link that carries the current page (and its query
 function loginLinkHref() {

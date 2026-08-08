@@ -4,7 +4,7 @@
     <script src="js/theme-init.js"></script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Urban Threads | Cart</title>
+    <title>Urban Threads | Profile</title>
     <link rel="stylesheet" href="css/style.css">
     <link rel="icon" type="image/png" href="assets/favicon.png">
 </head>
@@ -35,47 +35,31 @@
     </nav>
 
     <!-- ==========================
-         Cart
+         Profile
     =========================== -->
     <main>
         <section class="shop-header">
-            <h1>Your Cart</h1>
+            <h1>Your Profile</h1>
             <p>
-                Review your selected items before checkout.
+                Account details for your Urban Threads account.
             </p>
         </section>
 
-        <div class="gate" id="cart-gate" hidden>
-            <h2>Log in to see your cart</h2>
-            <p>Your cart is tied to your account so it's there whichever device you shop from.</p>
-            <a href="login.html?next=cart.html" class="btn btn-primary">Log in / Sign up</a>
+        <div class="gate" id="profile-gate" hidden>
+            <h2>Log in to view your profile</h2>
+            <p>Sign in to see your account details.</p>
+            <a href="login.html?next=profile.html" class="btn btn-primary">Log in / Sign up</a>
         </div>
 
-        <div class="cart-layout" id="cart-layout" hidden>
-            <div class="cart-list" id="cart-list">
-                <p class="loading-state">Loading cart…</p>
-            </div>
+        <div class="profile-card" id="profile-card" hidden>
+            <div class="profile-avatar-large" id="profile-avatar-large"></div>
 
-            <div class="cart-summary">
-                <h2>Order Summary</h2>
-                <div class="summary-row">
-                    <span>Subtotal</span>
-                    <span id="summary-subtotal">R0.00</span>
-                </div>
-                <div class="summary-row">
-                    <span>Shipping</span>
-                    <span>Free</span>
-                </div>
+            <h2 id="profile-email"></h2>
+            <p id="profile-joined"></p>
 
-                <div class="summary-row total">
-                    <span>Total</span>
-                    <span id="summary-total">R0.00</span>
-                </div>
-
-                <div class="summary-actions">
-                    <button type="button" id="checkout-btn" class="btn btn-primary btn-block" disabled>Checkout</button>
-                    <a href="shop.html" class="btn btn-outline btn-block">Continue Shopping</a>
-                </div>
+            <div class="profile-actions">
+                <a href="shop.html" class="btn btn-outline">Continue Shopping</a>
+                <button type="button" id="profile-logout-btn" class="btn btn-primary">Logout</button>
             </div>
         </div>
     </main>
@@ -99,7 +83,7 @@
 
     <script type="module" src="js/theme.js"></script>
     <script type="module" src="js/navbar.js"></script>
-    <script type="module" src="js/cart.js"></script>
+    <script type="module" src="js/profile.js"></script>
 
 </body>
 </html>
