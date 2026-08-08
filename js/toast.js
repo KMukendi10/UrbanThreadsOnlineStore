@@ -1,8 +1,7 @@
 // toast.js
 //
-// Small, non-blocking notification bar instead of native alert()/confirm()
+// Small, non-blocking notification bar instead of alert()/confirm()
 // popups. Any page that wants to use it needs a `<div class="toast"
-// id="toast"></div>` somewhere in the body.
 
 let hideTimer = null;
 
