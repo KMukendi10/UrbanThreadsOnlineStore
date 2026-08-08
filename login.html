@@ -1,131 +1,93 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-
     <script src="js/theme-init.js"></script>
-
     <meta charset="UTF-8">
-
-    <meta name="viewport"
-          content="width=device-width, initial-scale=1.0">
-
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Urban Threads | Login</title>
-
     <link rel="stylesheet" href="css/style.css">
-
 </head>
 <body>
 
     <!-- ==========================
          Navigation
     =========================== -->
-
     <nav>
-
         <div class="nav-container">
-
             <div class="logo">
-
                 <div class="logo-circle"></div>
-
                 Urban Threads
-
             </div>
 
             <div class="nav-links">
-
                 <a href="index.html">Home</a>
                 <a href="shop.html">Shop</a>
                 <a href="cart.html" class="cart-link">Cart<span class="cart-count" id="cart-count">0</span></a>
-
             </div>
 
             <div class="nav-right">
-
                 <button id="theme-toggle" class="theme-toggle" type="button" aria-label="Toggle dark mode">🌙</button>
-
                 <div class="nav-auth" id="nav-auth">
                     <a href="login.html" class="btn btn-outline">Login</a>
                 </div>
-
             </div>
-
         </div>
-
     </nav>
 
     <!-- ==========================
          Login Section
     =========================== -->
-
     <section class="login-page">
-
         <div class="login-image">
-
             <img
                 src="https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=900"
                 alt="Urban Threads">
-
         </div>
 
         <div class="login-container">
-
             <h1>
-
                 Welcome Back
-
             </h1>
 
             <p>
-
                 Login to continue shopping at Urban Threads.
-
             </p>
 
             <!-- Login / Sign up Tabs -->
 
             <div class="auth-tabs" role="tablist">
-
                 <button type="button" class="auth-tab" id="tab-login" role="tab" aria-selected="true">Login</button>
                 <button type="button" class="auth-tab" id="tab-signup" role="tab" aria-selected="false">Sign Up</button>
-
             </div>
 
             <form id="form-login">
-
                 <input
                     type="email"
                     id="login-email"
                     placeholder="Email Address"
                     required
                     autocomplete="email">
-
                 <input
                     type="password"
                     id="login-password"
                     placeholder="Password"
                     required
                     autocomplete="current-password">
-
                 <button
                     type="submit"
                     class="btn btn-primary">
-
                     Login
-
                 </button>
 
             </form>
 
             <form id="form-signup" hidden>
-
                 <input
                     type="email"
                     id="signup-email"
                     placeholder="Email Address"
                     required
                     autocomplete="email">
-
                 <input
                     type="password"
                     id="signup-password"
@@ -133,29 +95,20 @@
                     required
                     minlength="6"
                     autocomplete="new-password">
-
                 <button
                     type="submit"
                     class="btn btn-primary">
-
                     Create Account
-
                 </button>
-
             </form>
 
             <p id="message"></p>
-
             <p class="auth-switch">Only logged-in shoppers can access their cart and checkout.</p>
-
         </div>
-
     </section>
 
     <script type="module" src="js/theme.js"></script>
-
     <script type="module" src="js/navbar.js"></script>
-
     <script type="module" src="js/auth.js"></script>
 
 </body>
