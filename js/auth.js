@@ -1,5 +1,3 @@
-// auth.js
-//
 // Login page only. One card, two tabs (Login / Sign Up). Once Firebase
 // confirms a session exists, redirects straight to "next" (or shop.html)
 // so a logged-in user landing here bounces through instead of seeing the

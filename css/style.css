@@ -865,6 +865,7 @@ footer p {
     display: grid;
     grid-template-columns: 1fr 1fr;
     border: 2px solid var(--ink);
+    border-radius: 20px;
     margin-bottom: 28px;
 }
 
@@ -878,8 +879,12 @@ footer p {
     letter-spacing: 1px;
 }
 
-.auth-tab + .auth-tab {
-    border-left: 2px solid var(--ink);
+#tab-login {
+    border-radius: 18px;
+}
+
+#tab-signup {
+    border-radius: 18px;
 }
 
 .auth-tab[aria-selected="true"] {

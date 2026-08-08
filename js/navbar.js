@@ -2,7 +2,6 @@
 // always identical: Home / Shop / Cart links, theme toggle, and — driven
 // by auth state — either a "Login" link or the signed-in user's email
 // with a Logout button. Also keeps the blue cart-count badge live.
-//
 // Browsing (Shop) never requires login; only actions like adding to the
 // cart do, which is handled where that action happens, not here.
 

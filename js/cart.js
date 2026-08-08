@@ -1,9 +1,6 @@
-// cart.js
-//
 // If nobody's signed in, shows the #cart-gate panel with a "log in / sign
 // up" prompt instead of bouncing the visitor straight to the login page —
 // same pattern as add-to-cart on the shop page.
-//
 // Quantity +/- and remove update Firestore, then patch only the affected
 // row and the totals in the DOM — the list is never wiped and rebuilt, so
 // there's no flash that looks like the page reloading.
