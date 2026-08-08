@@ -1,183 +1,124 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-
     <script src="js/theme-init.js"></script>
-
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
     <title>Urban Threads | Shop</title>
-
     <link rel="stylesheet" href="css/style.css">
-
 </head>
 <body>
 
     <!-- ==========================
          Navigation
     =========================== -->
-
     <nav>
-
         <div class="nav-container">
-
             <div class="logo">
-
                 <div class="logo-circle"></div>
-
                 Urban Threads
-
             </div>
 
             <div class="nav-links">
-
                 <a href="index.html">Home</a>
                 <a href="shop.html">Shop</a>
                 <a href="cart.html" class="cart-link">Cart<span class="cart-count" id="cart-count">0</span></a>
-
             </div>
 
             <div class="nav-right">
-
                 <button id="theme-toggle" class="theme-toggle" type="button" aria-label="Toggle dark mode">🌙</button>
-
                 <div class="nav-auth" id="nav-auth">
                     <a href="login.html" class="btn btn-outline">Login</a>
                 </div>
-
             </div>
-
         </div>
-
     </nav>
 
     <!-- ==========================
          Shop Header
     =========================== -->
-
     <main>
-
         <section class="shop-header">
-
             <h1>Shop Collection</h1>
-
             <p>
-
                 Browse our latest collection of premium streetwear.
-
             </p>
 
         </section>
-
         <!-- ==========================
              Search
         =========================== -->
-
         <section class="search-section">
-
             <input
                 type="text"
                 id="search"
                 placeholder="Search products...">
-
         </section>
-
         <!-- ==========================
              Categories
         =========================== -->
-
         <section class="categories">
-
             <button
                 type="button"
                 class="category-btn active"
                 data-category="All">
-
                 All
-
             </button>
-
             <button
                 type="button"
                 class="category-btn"
                 data-category="Hoodies">
-
                 Hoodies
-
             </button>
 
             <button
                 type="button"
                 class="category-btn"
                 data-category="T-Shirts">
-
                 T-Shirts
-
             </button>
 
             <button
                 type="button"
                 class="category-btn"
                 data-category="Sneakers">
-
                 Sneakers
-
             </button>
 
             <button
                 type="button"
                 class="category-btn"
                 data-category="Accessories">
-
                 Accessories
-
             </button>
-
         </section>
 
         <!-- ==========================
              Products
         =========================== -->
-
         <section id="products">
-
         </section>
-
     </main>
 
     <!-- ==========================
          Footer
     =========================== -->
-
     <footer>
-
         <h2>
-
             Urban Threads
-
         </h2>
-
         <p>
-
             Premium Streetwear • Built with HTML, CSS, JavaScript & Firebase
-
         </p>
-
         <p>
-
             © 2026 Urban Threads. All Rights Reserved.
-
         </p>
-
     </footer>
 
     <div class="toast" id="toast"></div>
 
     <script type="module" src="js/theme.js"></script>
-
     <script type="module" src="js/navbar.js"></script>
-
     <script type="module" src="js/shop.js"></script>
 
 </body>
