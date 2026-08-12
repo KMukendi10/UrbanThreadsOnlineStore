@@ -145,6 +145,15 @@ function filterProducts() {
 // ===========================
 // Pagination
 // ===========================
+// Prevent pagination buttons from taking focus on click — otherwise the
+// browser auto-scrolls the focused button into view, which is the "jumps
+// up a bit" behaviour when the pagination row sits near the viewport edge.
+paginationContainer.addEventListener("mousedown", (event) => {
+    if (event.target.classList.contains("page-btn")) {
+        event.preventDefault();
+    }
+});
+
 function renderPagination(totalPages) {
     paginationContainer.innerHTML = "";
 
@@ -181,7 +190,6 @@ function renderPagination(totalPages) {
 function goToPage(page) {
     currentPage = page;
     filterProducts();
-    productsContainer.scrollIntoView({ behavior: "smooth", block: "start" });
 }
 
 searchInput.addEventListener("input", () => {
